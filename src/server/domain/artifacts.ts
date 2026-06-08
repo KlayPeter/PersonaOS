@@ -18,6 +18,19 @@ export async function listArtifacts() {
   });
 }
 
+export async function getLatestArtifactByType(type: ArtifactType) {
+  const prisma = getPrismaClient();
+  const workspace = await getOrCreateDefaultWorkspace();
+
+  return prisma.artifact.findFirst({
+    where: {
+      workspaceId: workspace.id,
+      type,
+    },
+    orderBy: { version: "desc" },
+  });
+}
+
 export async function getLatestArtifacts() {
   const artifacts = await listArtifacts();
   const latestByType = new Map<ArtifactType, (typeof artifacts)[number]>();

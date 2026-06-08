@@ -1,0 +1,17 @@
+{
+  "name": "writing-structure-feedback",
+  "material": {
+    "title": "长文结构反馈",
+    "type": "feedback",
+    "summary": "用户觉得内容不该缩短，而应该更清楚。",
+    "content": "不是文字太多，而是分类不清、主线不稳。长文可以继续长，但一定要用标题、表格和步骤把逻辑支起来。"
+  },
+  "workspaceProfile": {
+    "identity": "写作者",
+    "primaryScenarios": ["写长文", "沉淀风格"],
+    "rememberNotes": "喜欢高信息密度和清晰结构。",
+    "dislikedBehaviors": ["空话", "跑偏"],
+    "outputPreferences": ["有主线", "有层次"]
+  },
+  "expectedInsightTypes": ["style"]
+}

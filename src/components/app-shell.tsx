@@ -7,6 +7,7 @@ const navigation = [
   { href: "/proposals", label: "提案" },
   { href: "/rulebase", label: "规则库" },
   { href: "/artifacts", label: "资产" },
+  { href: "/playground", label: "测试场" },
   { href: "/changelog", label: "变更" },
 ];
 

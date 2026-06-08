@@ -110,6 +110,19 @@ enum ArtifactType {
   personal_system
 }
 
+enum PlaygroundFeedback {
+  good
+  not_like_me
+  too_vague
+  too_short
+  too_long
+  too_scattered
+  too_template
+  logic_weak
+  examples_missing
+  custom
+}
+
 model User {
   id         String      @id @default(cuid())
   email      String      @unique
@@ -141,6 +154,7 @@ model Workspace {
   workflowRuns      WorkflowRun[]
   changelogs        Changelog[]
   artifacts         Artifact[]
+  playgroundRuns    PlaygroundRun[]
 }
 
 model Material {
@@ -249,9 +263,27 @@ model Artifact {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   workspace   Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  playgroundRuns PlaygroundRun[]
 
   @@unique([workspaceId, type, version])
   @@index([workspaceId, type, createdAt])
+}
+
+model PlaygroundRun {
+  id              String              @id @default(cuid())
+  workspaceId     String
+  sourceArtifactId String?
+  artifactType    ArtifactType
+  inputTask       String              @db.Text
+  output          String              @db.LongText
+  feedback        PlaygroundFeedback?
+  feedbackText    String?             @db.Text
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  workspace       Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceArtifact  Artifact?           @relation(fields: [sourceArtifactId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, artifactType, createdAt])
 }
 
 model WorkflowRun {

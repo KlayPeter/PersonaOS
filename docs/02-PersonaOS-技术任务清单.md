@@ -263,30 +263,31 @@
 
 ### 9.1 数据模型
 
-- [ ] `P0` 创建 `PlaygroundRun` 表
+- [x] `P0` 创建 `PlaygroundRun` 表
 - [ ] `P1` 增加 feedback 枚举和自定义反馈文本
 
 ### 9.2 Prompt 与 Schema
 
-- [ ] `P0` 创建 `feedback-to-proposal` prompt
+- [x] `P0` 创建 `feedback-to-proposal` prompt
 - [ ] `P0` 定义反馈转提案输出 schema
-- [ ] `P0` 创建 `runPlayground()` 调用入口
+- [x] `P0` 定义反馈转提案输出 schema
+- [x] `P0` 创建 `runPlayground()` 调用入口
 
 ### 9.3 页面与 API
 
-- [ ] `P0` 建立 `/app/playground` 页面
-- [ ] `P0` 支持选择 artifact 类型
-- [ ] `P0` 支持输入测试任务
-- [ ] `P0` 展示输出结果
-- [ ] `P0` 支持反馈按钮组
-- [ ] `P0` 实现 `POST /api/playground/run`
-- [ ] `P0` 实现 `POST /api/playground/:id/feedback`
+- [x] `P0` 建立 `/app/playground` 页面
+- [x] `P0` 支持选择 artifact 类型
+- [x] `P0` 支持输入测试任务
+- [x] `P0` 展示输出结果
+- [x] `P0` 支持反馈按钮组
+- [x] `P0` 实现 `POST /api/playground/run`
+- [x] `P0` 实现 `POST /api/playground/:id/feedback`
 
 ### 9.4 Harness Workflow
 
-- [ ] `P0` 实现 `playground_run` workflow
-- [ ] `P0` 实现 `feedback_to_proposal` workflow
-- [ ] `P0` 从反馈生成新 proposal
+- [x] `P0` 实现 `playground_run` workflow
+- [x] `P0` 实现 `feedback_to_proposal` workflow
+- [x] `P0` 从反馈生成新 proposal
 - [ ] `P1` 保存反馈前后上下文
 
 验收标准：
@@ -306,10 +307,10 @@
 
 ### 10.2 评估集
 
-- [ ] `P0` 建立 `evals/materials` 目录
+- [x] `P0` 建立 `evals/materials` 目录
 - [ ] `P0` 准备 10 条真实素材样本
 - [ ] `P0` 为样本写预期 insight/proposal 方向
-- [ ] `P1` 编写批量评估脚本
+- [x] `P1` 编写批量评估脚本
 - [ ] `P1` 记录提案接受率、编辑率、空泛率
 
 ### 10.3 质量门槛
@@ -329,7 +330,7 @@
 
 - [ ] `P0` 检查核心链路是否完整
 - [ ] `P0` 验证从 Material 到 Artifact 的完整主线
-- [ ] `P0` 验证 Playground 反馈是否回流到 Proposal
+- [x] `P0` 验证 Playground 反馈是否回流到 Proposal
 - [ ] `P1` 补充空状态和错误提示
 
 ### 11.2 文档收口

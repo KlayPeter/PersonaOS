@@ -93,6 +93,13 @@ export default async function Home() {
                 <p>正式规则可以被编译成 AGENTS.md、writing-style.md 和 personal-system.md，并保存版本。</p>
               </div>
             </article>
+            <article className="step-card">
+              <Sparkles className="step-icon" />
+              <div>
+                <h3>Playground Evolve</h3>
+                <p>可以选择资产跑任务，再把“太散”“不像我”等反馈回流成新的规则提案。</p>
+              </div>
+            </article>
           </div>
         </div>
 

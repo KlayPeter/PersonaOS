@@ -1,0 +1,17 @@
+{
+  "name": "workflow-retro-note",
+  "material": {
+    "title": "复盘工作流笔记",
+    "type": "note",
+    "summary": "用户希望把复盘沉淀成流程。",
+    "content": "每次复盘都要提炼步骤、判断标准和可复用清单，否则经验很快就散掉。"
+  },
+  "workspaceProfile": {
+    "identity": "独立开发者",
+    "primaryScenarios": ["复盘", "沉淀方法论"],
+    "rememberNotes": "经验要形成可复用流程。",
+    "dislikedBehaviors": ["只给结论不沉淀步骤"],
+    "outputPreferences": ["流程化", "可回放"]
+  },
+  "expectedInsightTypes": ["workflow"]
+}

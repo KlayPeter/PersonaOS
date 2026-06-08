@@ -1,3 +1,6 @@
+import type { ArtifactType, PlaygroundFeedback } from "@prisma/client";
+
+import type { FeedbackProposalOutput } from "@/server/ai/schemas/feedback-proposal";
 import type { ProposalOutput } from "@/server/ai/schemas/proposal";
 import type { InsightOutput } from "@/server/ai/schemas/insight";
 
@@ -44,6 +47,30 @@ type GenerateRuleProposalsInput = {
   };
 };
 
+type RunPlaygroundInput = {
+  artifact: {
+    type: ArtifactType;
+    title: string;
+    content: string;
+    version: number;
+  };
+  workspaceProfile: {
+    identity: string;
+    primaryScenarios: string[];
+    rememberNotes: string;
+    outputPreferences: string[];
+  };
+  task: string;
+};
+
+type ConvertFeedbackToProposalInput = {
+  artifactType: ArtifactType;
+  task: string;
+  output: string;
+  feedbackType: PlaygroundFeedback;
+  feedbackText?: string;
+};
+
 function buildEvidence(content: string) {
   const normalized = content.replace(/\s+/g, " ").trim();
   return normalized.slice(0, 140) || "素材正文未提供足够证据。";
@@ -51,6 +78,18 @@ function buildEvidence(content: string) {
 
 function includesAny(content: string, keywords: string[]) {
   return keywords.some((keyword) => content.includes(keyword));
+}
+
+function artifactFilename(type: ArtifactType) {
+  if (type === "agents_md") {
+    return "AGENTS.md";
+  }
+
+  if (type === "writing_style") {
+    return "writing-style.md";
+  }
+
+  return "personal-system.md";
 }
 
 function buildInsights(input: AnalyzeMaterialInput): InsightOutput["insights"] {
@@ -184,6 +223,120 @@ function mapInsightToProposal(
   };
 }
 
+function summarizeArtifactExcerpt(content: string) {
+  return content
+    .split("\n")
+    .filter((line) => line.trim())
+    .slice(0, 6)
+    .join("\n");
+}
+
+function buildPlaygroundOutput(input: RunPlaygroundInput) {
+  const excerpt = summarizeArtifactExcerpt(input.artifact.content);
+
+  return [
+    `任务：${input.task}`,
+    "",
+    `使用资产：${artifactFilename(input.artifact.type)} v${input.artifact.version}`,
+    "",
+    "执行说明：",
+    `- 当前身份：${input.workspaceProfile.identity || "未设置"}`,
+    `- 重点场景：${input.workspaceProfile.primaryScenarios.join(" / ") || "未设置"}`,
+    `- 输出偏好：${input.workspaceProfile.outputPreferences.join(" / ") || "未设置"}`,
+    "",
+    "资产要点摘录：",
+    excerpt || "- 当前资产还没有可提炼的规则摘录。",
+    "",
+    "模拟输出：",
+    `基于当前资产，PersonaOS 会优先围绕「${input.task}」给出结构清楚、贴合个人偏好的回答，并避免偏离既有规则。`,
+  ].join("\n");
+}
+
+function mapFeedbackToProposal(
+  input: ConvertFeedbackToProposalInput,
+): FeedbackProposalOutput["proposals"] {
+  const filename = artifactFilename(input.artifactType);
+  const feedbackReason = input.feedbackText?.trim() || "用户在 Playground 中给出了负向反馈。";
+
+  if (input.feedbackType === "too_scattered") {
+    return [
+      {
+        title: "补充输出主线与结构控制规则",
+        category: "writing",
+        action: "add",
+        proposedContent:
+          "当输出较长内容时，必须先明确主线，再按层次展开；每个分节都要服务于中心论点，避免只堆积分点。",
+        reason: "用户反馈当前 Playground 输出太散，说明现有资产对结构控制还不够明确。",
+        evidence: feedbackReason,
+        affectedArtifacts: ["writing-style.md", "personal-system.md"],
+        confidence: 0.89,
+      },
+    ];
+  }
+
+  if (input.feedbackType === "too_vague" || input.feedbackType === "too_template") {
+    return [
+      {
+        title: "补充反模板化表达规则",
+        category: "ai_collaboration",
+        action: "add",
+        proposedContent:
+          "输出必须优先给出具体判断、边界和例子，避免空泛总结、模板化套话和无证据延展。",
+        reason: "Playground 反馈说明当前资产还不足以抑制空泛或模板化表达。",
+        evidence: feedbackReason,
+        affectedArtifacts: ["AGENTS.md", "writing-style.md"],
+        confidence: 0.87,
+      },
+    ];
+  }
+
+  if (input.feedbackType === "not_like_me") {
+    return [
+      {
+        title: "强化个人语气与偏好映射",
+        category: "personal",
+        action: "add",
+        proposedContent:
+          "生成内容前应先对齐用户身份、目标和常用表达风格，确保成文在结构、节奏和判断方式上更像用户本人。",
+        reason: "用户直接反馈“不像我”，说明当前资产对个人风格映射还不够强。",
+        evidence: feedbackReason,
+        affectedArtifacts: [filename, "personal-system.md"],
+        confidence: 0.84,
+      },
+    ];
+  }
+
+  if (input.feedbackType === "logic_weak" || input.feedbackType === "examples_missing") {
+    return [
+      {
+        title: "要求关键结论补逻辑链路与示例",
+        category: "knowledge",
+        action: "add",
+        proposedContent:
+          "涉及观点输出时，至少补齐一层推理链路，并优先给出贴近场景的示例，避免只给结论不给支撑。",
+        reason: "用户反馈说明当前资产需要更明确地约束论证与举例质量。",
+        evidence: feedbackReason,
+        affectedArtifacts: ["writing-style.md", "personal-system.md"],
+        confidence: 0.83,
+      },
+    ];
+  }
+
+  return [
+    {
+      title: "细化 Playground 反馈对应的修正规则",
+      category: "ai_collaboration",
+      action: "add",
+      proposedContent:
+        "当 Playground 出现负向反馈时，应优先把反馈转成明确的结构、边界或表达规则，再进入 proposal 审核。",
+      reason: "当前反馈暴露出资产仍有可细化空间，需要形成更明确的修正规则。",
+      evidence: feedbackReason,
+      affectedArtifacts: [filename, "personal-system.md"],
+      confidence: 0.76,
+    },
+  ];
+}
+
 export class AIService {
   async analyzeMaterial(input: AnalyzeMaterialInput): Promise<AIResult<InsightOutput>> {
     const output = {
@@ -216,6 +369,46 @@ export class AIService {
       log: {
         model: process.env.AI_PROVIDER ?? "mock",
         promptName: "rule-proposal-generation",
+        promptVersion: "v1",
+        rawRequest: JSON.stringify(input, null, 2),
+        rawResponse: JSON.stringify(output, null, 2),
+        parsedOutput: JSON.stringify(output, null, 2),
+        status: "success",
+      },
+    };
+  }
+
+  async runPlayground(input: RunPlaygroundInput): Promise<AIResult<{ output: string }>> {
+    const output = {
+      output: buildPlaygroundOutput(input),
+    };
+
+    return {
+      output,
+      log: {
+        model: process.env.AI_PROVIDER ?? "mock",
+        promptName: "playground-run",
+        promptVersion: "v1",
+        rawRequest: JSON.stringify(input, null, 2),
+        rawResponse: JSON.stringify(output, null, 2),
+        parsedOutput: JSON.stringify(output, null, 2),
+        status: "success",
+      },
+    };
+  }
+
+  async convertFeedbackToProposal(
+    input: ConvertFeedbackToProposalInput,
+  ): Promise<AIResult<FeedbackProposalOutput>> {
+    const output = {
+      proposals: mapFeedbackToProposal(input),
+    };
+
+    return {
+      output,
+      log: {
+        model: process.env.AI_PROVIDER ?? "mock",
+        promptName: "feedback-to-proposal",
         promptVersion: "v1",
         rawRequest: JSON.stringify(input, null, 2),
         rawResponse: JSON.stringify(output, null, 2),

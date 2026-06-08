@@ -1,0 +1,17 @@
+{
+  "name": "coding-boundary-feedback",
+  "material": {
+    "title": "工程边界反馈",
+    "type": "feedback",
+    "summary": "用户不希望 AI 乱动架构。",
+    "content": "涉及代码时不要乱改架构，也不要随便扩依赖。优先在现有边界内做小而稳的修改。"
+  },
+  "workspaceProfile": {
+    "identity": "前端开发者",
+    "primaryScenarios": ["AI 写代码"],
+    "rememberNotes": "保持工程边界和依赖约束。",
+    "dislikedBehaviors": ["乱加依赖", "大改结构"],
+    "outputPreferences": ["小步修改", "可 review"]
+  },
+  "expectedInsightTypes": ["boundary"]
+}
