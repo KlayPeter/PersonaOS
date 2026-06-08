@@ -5,7 +5,7 @@ import { ProposalStatus } from "@prisma/client";
 import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { ProposalActions } from "@/components/proposal-actions";
 import { formatDate } from "@/lib/utils";
-import { listProposals, serializeAffectedArtifacts } from "@/server/domain/proposals";
+import { getProposalReviewSnapshot, listProposals, serializeAffectedArtifacts } from "@/server/domain/proposals";
 
 const categoryLabel: Record<string, string> = {
   personal: "个人规则",
@@ -26,6 +26,7 @@ const statusLabel: Record<string, string> = {
 export default async function ProposalsPage() {
   const pending = await listProposals(ProposalStatus.pending);
   const recent = (await listProposals()).filter((proposal) => proposal.status !== ProposalStatus.pending).slice(0, 8);
+  const quality = await getProposalReviewSnapshot();
 
   return (
     <div className="flex flex-col gap-8">
@@ -42,6 +43,42 @@ export default async function ProposalsPage() {
             由 Harness 负责写入 Rulebase 和 changelog。
           </p>
         </div>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-5">
+        <article className="panel-muted flex flex-col gap-3">
+          <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">接受率</p>
+          <p className="font-serif text-5xl text-[color:var(--ink)]">{Math.round(quality.acceptanceRate * 100)}%</p>
+          <p className="text-sm text-[color:var(--muted)]">
+            {quality.acceptedCount}/{quality.decisionCount || 0} 条已决策 proposal 被直接接受
+          </p>
+        </article>
+        <article className="panel-muted flex flex-col gap-3">
+          <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">编辑率</p>
+          <p className="font-serif text-5xl text-[color:var(--ink)]">{Math.round(quality.editedRate * 100)}%</p>
+          <p className="text-sm text-[color:var(--muted)]">
+            {quality.editedCount}/{quality.decisionCount || 0} 条需要人工改写后才入库
+          </p>
+        </article>
+        <article className="panel-muted flex flex-col gap-3">
+          <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">拒绝率</p>
+          <p className="font-serif text-5xl text-[color:var(--ink)]">{Math.round(quality.rejectionRate * 100)}%</p>
+          <p className="text-sm text-[color:var(--muted)]">
+            {quality.rejectedCount}/{quality.decisionCount || 0} 条被明确拒绝
+          </p>
+        </article>
+        <article className="panel-muted flex flex-col gap-3">
+          <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">空泛率</p>
+          <p className="font-serif text-5xl text-[color:var(--ink)]">{Math.round(quality.vagueRate * 100)}%</p>
+          <p className="text-sm text-[color:var(--muted)]">
+            {quality.vagueCount}/{quality.totalProposalCount || 0} 条 proposal 被判定为空泛
+          </p>
+        </article>
+        <article className="panel-muted flex flex-col gap-3">
+          <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">待审核</p>
+          <p className="font-serif text-5xl text-[color:var(--ink)]">{quality.pendingCount}</p>
+          <p className="text-sm text-[color:var(--muted)]">当前仍在等待人工确认的提案数量</p>
+        </article>
       </section>
 
       <section className="panel flex flex-col gap-6">
@@ -102,6 +139,51 @@ export default async function ProposalsPage() {
                     proposedContent={proposal.proposedContent}
                     category={proposal.category}
                   />
+                </div>
+              </article>
+            ))
+          )}
+        </div>
+      </section>
+
+      <section className="panel flex flex-col gap-5">
+        <div>
+          <p className="eyebrow">Review Sample</p>
+          <h2 className="font-serif text-3xl text-[color:var(--ink)]">人工抽样复查</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--muted)]">
+            这里会优先抽样“编辑后接受”“可执行性偏弱”“高置信度被拒绝”等提案，帮助检查 prompt 方向和人工审核口径是否稳定。
+          </p>
+        </div>
+
+        <div className="grid gap-4">
+          {quality.sample.length === 0 ? (
+            <EmptyStatePanel
+              title="还没有可复查样本"
+              description="先处理几条 proposal，这里才会开始积累人工抽样复查候选。"
+            />
+          ) : (
+            quality.sample.map((proposal) => (
+              <article key={proposal.id} className="panel-muted flex flex-col gap-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="status-chip">{statusLabel[proposal.status]}</span>
+                  <span className="tag-chip">{categoryLabel[proposal.category] ?? proposal.category}</span>
+                  {proposal.confidence ? (
+                    <span className="tag-chip">置信度 {Math.round(proposal.confidence * 100)}%</span>
+                  ) : null}
+                  <span className="text-xs text-[color:var(--muted)]">{formatDate(proposal.updatedAt)}</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xl font-medium text-[color:var(--ink)]">{proposal.title}</h3>
+                  <p className="text-sm leading-7 text-[color:var(--muted)]">{proposal.proposedContent}</p>
+                </div>
+                <p className="rounded-2xl bg-[color:var(--paper)] px-4 py-3 text-sm leading-7 text-[color:var(--muted)]">
+                  复查原因：{proposal.reviewReason}
+                </p>
+                <div className="flex flex-wrap gap-3 text-xs text-[color:var(--muted)]">
+                  <span>素材：{proposal.material?.title ?? "未绑定素材"}</span>
+                  <span>洞察：{proposal.insight?.title ?? "未绑定 insight"}</span>
+                  <span>空泛判定：{proposal.isVague ? "是" : "否"}</span>
+                  <span>可执行判定：{proposal.isActionable ? "是" : "否"}</span>
                 </div>
               </article>
             ))

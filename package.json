@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "tsx --test tests/**/*.test.ts",
     "evals:materials": "tsx scripts/run-material-evals.ts",
+    "review:proposals": "tsx scripts/run-proposal-review.ts",
     "verify:mvp": "tsx scripts/run-mvp-stories.ts",
     "prisma:generate": "prisma generate",
     "db:up": "docker compose up -d mysql",

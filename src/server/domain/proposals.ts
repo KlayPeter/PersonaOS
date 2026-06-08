@@ -8,6 +8,7 @@ import {
 
 import { getPrismaClient } from "@/server/db/client";
 import { getOrCreateDefaultWorkspace } from "@/server/domain/workspace";
+import { buildProposalReviewSnapshot } from "@/server/evals/proposal-review";
 import { runWorkflow } from "@/server/harness/workflow-runner";
 
 function jsonArrayToStrings(value: Prisma.JsonValue | null | undefined) {
@@ -53,6 +54,11 @@ export async function getProposalById(proposalId: string) {
       insight: true,
     },
   });
+}
+
+export async function getProposalReviewSnapshot() {
+  const proposals = await listProposals();
+  return buildProposalReviewSnapshot(proposals);
 }
 
 export async function rejectProposal(proposalId: string) {

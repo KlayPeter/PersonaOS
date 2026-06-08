@@ -3,6 +3,7 @@ import type { ArtifactType, PlaygroundFeedback } from "@prisma/client";
 import type { FeedbackProposalOutput } from "@/server/ai/schemas/feedback-proposal";
 import type { ProposalOutput } from "@/server/ai/schemas/proposal";
 import type { InsightOutput } from "@/server/ai/schemas/insight";
+import { getPromptSpec, type PromptName } from "@/server/ai/prompt-registry";
 
 type LLMLog = {
   model: string;
@@ -101,20 +102,20 @@ function estimateTokens(value: string) {
 }
 
 function buildLog<TInput, TOutput>(input: {
-  promptName: string;
-  promptVersion: string;
+  promptName: PromptName;
   request: TInput;
   response: TOutput;
   durationMs: number;
   status?: "success" | "parse_failed" | "model_failed";
 }): LLMLog {
+  const prompt = getPromptSpec(input.promptName);
   const rawRequest = JSON.stringify(input.request, null, 2);
   const rawResponse = JSON.stringify(input.response, null, 2);
 
   return {
     model: process.env.AI_PROVIDER ?? "mock",
     promptName: input.promptName,
-    promptVersion: input.promptVersion,
+    promptVersion: prompt.version,
     retryCount: 0,
     durationMs: Math.max(1, input.durationMs),
     inputTokens: estimateTokens(rawRequest),
@@ -382,7 +383,6 @@ export class AIService {
       output,
       log: buildLog({
         promptName: "material-analysis",
-        promptVersion: "v1",
         request: input,
         response: output,
         durationMs: Date.now() - startedAt,
@@ -402,7 +402,6 @@ export class AIService {
       output,
       log: buildLog({
         promptName: "rule-proposal-generation",
-        promptVersion: "v1",
         request: input,
         response: output,
         durationMs: Date.now() - startedAt,
@@ -420,7 +419,6 @@ export class AIService {
       output,
       log: buildLog({
         promptName: "playground-run",
-        promptVersion: "v1",
         request: input,
         response: output,
         durationMs: Date.now() - startedAt,
@@ -440,7 +438,6 @@ export class AIService {
       output,
       log: buildLog({
         promptName: "feedback-to-proposal",
-        promptVersion: "v1",
         request: input,
         response: output,
         durationMs: Date.now() - startedAt,
