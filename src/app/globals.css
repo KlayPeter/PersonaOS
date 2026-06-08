@@ -255,3 +255,20 @@ button {
   color: var(--accent);
   margin-top: 0.2rem;
 }
+
+.artifact-preview {
+  overflow-x: auto;
+  border-radius: 1.5rem;
+  border: 1px solid var(--line);
+  background: #14110f;
+  color: #f6efe7;
+  padding: 1.25rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.artifact-preview-compact {
+  max-height: 22rem;
+}

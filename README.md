@@ -24,6 +24,9 @@ Workspace Profile
 - Proposal 审核页，支持接受、拒绝、编辑后接受
 - `apply_proposal` workflow、Rulebase 与 Changelog
 - 正式规则的编辑、归档与来源追踪
+- `/artifacts` 资产页，支持生成、预览、复制和下载 Markdown
+- `generate_artifact` workflow 与 Artifact 版本保存
+- 已支持 `AGENTS.md`、`writing-style.md`、`personal-system.md`
 
 ## 本地启动
 
@@ -67,6 +70,7 @@ npm run dev
 - `/inbox/[id]`：素材详情、洞察与提案
 - `/proposals`：审核候选规则提案
 - `/rulebase`：浏览与维护正式规则
+- `/artifacts`：生成与查看导出资产
 - `/changelog`：查看关键变更记录
 
 ## 目录结构

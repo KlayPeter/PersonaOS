@@ -226,33 +226,33 @@
 
 ### 8.1 数据模型
 
-- [ ] `P0` 创建 `Artifact` 表
-- [ ] `P0` 支持 `type` 和 `version`
+- [x] `P0` 创建 `Artifact` 表
+- [x] `P0` 支持 `type` 和 `version`
 
 ### 8.2 模板系统
 
-- [ ] `P0` 创建 `AGENTS.md` 模板
-- [ ] `P0` 创建 `writing-style.md` 模板
-- [ ] `P0` 创建 `personal-system.md` 模板
-- [ ] `P0` 创建规则分类到模板段落的映射逻辑
+- [x] `P0` 创建 `AGENTS.md` 模板
+- [x] `P0` 创建 `writing-style.md` 模板
+- [x] `P0` 创建 `personal-system.md` 模板
+- [x] `P0` 创建规则分类到模板段落的映射逻辑
 - [ ] `P1` 增加 LLM 润色可选步骤
 
 ### 8.3 Harness Workflow
 
-- [ ] `P0` 实现 `generate_artifact` workflow
-- [ ] `P0` 步骤 1：加载 active rules
-- [ ] `P0` 步骤 2：整理 artifact context
-- [ ] `P0` 步骤 3：生成 artifact 内容
-- [ ] `P0` 步骤 4：保存 artifact 版本
+- [x] `P0` 实现 `generate_artifact` workflow
+- [x] `P0` 步骤 1：加载 active rules
+- [x] `P0` 步骤 2：整理 artifact context
+- [x] `P0` 步骤 3：生成 artifact 内容
+- [x] `P0` 步骤 4：保存 artifact 版本
 
 ### 8.4 页面与 API
 
-- [ ] `P0` 建立 `/app/artifacts` 页面
-- [ ] `P0` 提供三个生成按钮
-- [ ] `P0` 展示生成结果
-- [ ] `P0` 支持复制到剪贴板
-- [ ] `P0` 支持下载 Markdown
-- [ ] `P0` 实现 `POST /api/artifacts/generate`
+- [x] `P0` 建立 `/app/artifacts` 页面
+- [x] `P0` 提供三个生成按钮
+- [x] `P0` 展示生成结果
+- [x] `P0` 支持复制到剪贴板
+- [x] `P0` 支持下载 Markdown
+- [x] `P0` 实现 `POST /api/artifacts/generate`
 
 验收标准：
 

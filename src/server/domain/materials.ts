@@ -79,8 +79,9 @@ export async function getDashboardSnapshot() {
   const prisma = getPrismaClient();
   const workspace = await getOrCreateDefaultWorkspace();
 
-  const [materialCount, insightCount, proposalCount, workflowCount, recentMaterials] =
+  const [artifactCount, materialCount, insightCount, proposalCount, workflowCount, recentMaterials] =
     await Promise.all([
+      prisma.artifact.count({ where: { workspaceId: workspace.id } }),
       prisma.material.count({ where: { workspaceId: workspace.id } }),
       prisma.insight.count({ where: { workspaceId: workspace.id } }),
       prisma.ruleProposal.count({ where: { workspaceId: workspace.id } }),
@@ -98,6 +99,7 @@ export async function getDashboardSnapshot() {
       { label: "素材", value: materialCount, hint: "Inbox 中的输入基线" },
       { label: "洞察", value: insightCount, hint: "结构化中间产物" },
       { label: "提案", value: proposalCount, hint: "待人工确认的候选规则" },
+      { label: "资产", value: artifactCount, hint: "已保存的导出版本" },
       { label: "流程运行", value: workflowCount, hint: "Harness 执行痕迹" },
     ],
     recentMaterials,

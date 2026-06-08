@@ -6,6 +6,7 @@ const navigation = [
   { href: "/inbox", label: "素材箱" },
   { href: "/proposals", label: "提案" },
   { href: "/rulebase", label: "规则库" },
+  { href: "/artifacts", label: "资产" },
   { href: "/changelog", label: "变更" },
 ];
 
@@ -15,7 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <header className="border-b border-[color:var(--line)] bg-[color:var(--panel-strong)]/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6 py-5 lg:px-10">
           <div>
-            <p className="eyebrow">PersonaOS / Phase 1</p>
+            <p className="eyebrow">PersonaOS / MVP Build</p>
             <Link href="/" className="font-serif text-3xl tracking-[0.12em] text-[color:var(--ink)]">
               PERSONAOS
             </Link>

@@ -104,6 +104,12 @@ enum ChangeType {
   proposal_rejected
 }
 
+enum ArtifactType {
+  agents_md
+  writing_style
+  personal_system
+}
+
 model User {
   id         String      @id @default(cuid())
   email      String      @unique
@@ -134,6 +140,7 @@ model Workspace {
   rules             Rule[]
   workflowRuns      WorkflowRun[]
   changelogs        Changelog[]
+  artifacts         Artifact[]
 }
 
 model Material {
@@ -230,6 +237,21 @@ model Changelog {
   relatedRule       Rule?       @relation(fields: [relatedRuleId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId, createdAt])
+}
+
+model Artifact {
+  id          String       @id @default(cuid())
+  workspaceId String
+  type        ArtifactType
+  title       String
+  content     String       @db.LongText
+  version     Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  workspace   Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, type, version])
+  @@index([workspaceId, type, createdAt])
 }
 
 model WorkflowRun {

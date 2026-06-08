@@ -39,7 +39,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-4">
+      <section className="grid gap-4 lg:grid-cols-5">
         {stats.map((item) => (
           <article key={item.label} className="panel-muted flex flex-col gap-3">
             <p className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">
@@ -55,7 +55,7 @@ export default async function Home() {
         <div className="panel flex flex-col gap-6">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="eyebrow">Phase 1 / Working Surface</p>
+              <p className="eyebrow">Current Surface</p>
               <h2 className="font-serif text-4xl text-[color:var(--ink)]">已搭好的主流程</h2>
             </div>
             <Link href="/inbox" className="secondary-link">
@@ -84,6 +84,13 @@ export default async function Home() {
               <div>
                 <h3>Analyze Workflow</h3>
                 <p>可以生成 insights 与 rule proposals，并将 WorkflowRun / StepRun / LLMRun 记入数据库。</p>
+              </div>
+            </article>
+            <article className="step-card">
+              <Sparkles className="step-icon" />
+              <div>
+                <h3>Artifact Compile</h3>
+                <p>正式规则可以被编译成 AGENTS.md、writing-style.md 和 personal-system.md，并保存版本。</p>
               </div>
             </article>
           </div>
