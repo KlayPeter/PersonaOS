@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { ProposalStatus } from "@prisma/client";
 
+import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { ProposalActions } from "@/components/proposal-actions";
 import { formatDate } from "@/lib/utils";
 import { listProposals, serializeAffectedArtifacts } from "@/server/domain/proposals";
@@ -53,9 +54,14 @@ export default async function ProposalsPage() {
 
         <div className="grid gap-5">
           {pending.length === 0 ? (
-            <p className="text-sm leading-7 text-[color:var(--muted)]">
-              当前没有待审核提案。你可以先去 Inbox 对素材运行 analyze workflow。
-            </p>
+            <EmptyStatePanel
+              title="当前没有待审核提案"
+              description="可以先去 Inbox 对新素材运行 analyze workflow，或者在 Playground 中对已有资产给负向反馈，把问题回流成新 proposal。"
+              actions={[
+                { href: "/inbox", label: "去分析素材" },
+                { href: "/playground", label: "去测试场回流反馈" },
+              ]}
+            />
           ) : (
             pending.map((proposal) => (
               <article key={proposal.id} className="panel-muted flex flex-col gap-5">
@@ -111,7 +117,10 @@ export default async function ProposalsPage() {
 
         <div className="grid gap-4 md:grid-cols-2">
           {recent.length === 0 ? (
-            <p className="text-sm leading-7 text-[color:var(--muted)]">还没有处理过的提案。</p>
+            <EmptyStatePanel
+              title="还没有处理记录"
+              description="接受、拒绝或编辑后接受任一 proposal 后，这里会保留最近的人审决策。"
+            />
           ) : (
             recent.map((proposal) => (
               <article key={proposal.id} className="panel-muted flex flex-col gap-3">

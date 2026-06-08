@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 
 import { AnalyzeButton } from "@/components/analyze-button";
+import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { formatDate } from "@/lib/utils";
 import { getMaterialDetail, serializeMaterialTags } from "@/server/domain/materials";
 
@@ -108,9 +109,10 @@ export default async function MaterialDetailPage({
 
           <div className="grid gap-4">
             {material.insights.length === 0 ? (
-              <p className="text-sm leading-7 text-[color:var(--muted)]">
-                还没有分析结果。先运行 analyze workflow。
-              </p>
+              <EmptyStatePanel
+                title="这条素材还没有洞察"
+                description="先运行右上角的 analyze workflow。完成后这里会展示结构化 insight，并继续生成 proposal。"
+              />
             ) : (
               material.insights.map((insight) => (
                 <article key={insight.id} className="panel-muted flex flex-col gap-3">
@@ -141,9 +143,11 @@ export default async function MaterialDetailPage({
 
           <div className="grid gap-4">
             {material.proposals.length === 0 ? (
-              <p className="text-sm leading-7 text-[color:var(--muted)]">
-                还没有提案。提案将在 insight 验证通过后自动生成。
-              </p>
+              <EmptyStatePanel
+                title="候选规则还没生成出来"
+                description="只要 insight 校验通过，这里就会自动落出 proposal。下一步通常是去提案页做人审，再进入 Rulebase。"
+                actions={[{ href: "/proposals", label: "查看提案页" }]}
+              />
             ) : (
               material.proposals.map((proposal) => (
                 <article key={proposal.id} className="panel-muted flex flex-col gap-3">

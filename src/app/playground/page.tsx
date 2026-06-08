@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { formatDate } from "@/lib/utils";
 import { artifactTypeOptions } from "@/server/artifacts/registry";
 import { listPlaygroundRuns } from "@/server/domain/playground";
+import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { PlaygroundConsole } from "@/components/playground-console";
 
 const feedbackLabel: Record<string, string> = {
@@ -53,7 +54,14 @@ export default async function PlaygroundPage() {
 
         <div className="grid gap-4">
           {runs.length === 0 ? (
-            <p className="text-sm leading-7 text-[color:var(--muted)]">还没有 Playground 记录。</p>
+            <EmptyStatePanel
+              title="测试场还没有运行记录"
+              description="先生成至少一份资产，再来这里跑任务和收反馈。负向反馈会直接回流成新的 proposal。"
+              actions={[
+                { href: "/artifacts", label: "先生成资产" },
+                { href: "/proposals", label: "查看待审提案" },
+              ]}
+            />
           ) : (
             runs.map((run) => (
               <article key={run.id} className="panel-muted flex flex-col gap-4">

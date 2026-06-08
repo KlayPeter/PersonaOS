@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 
+import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { MaterialForm } from "@/components/material-form";
 import { formatDate } from "@/lib/utils";
 import { listMaterials, serializeMaterialTags } from "@/server/domain/materials";
@@ -56,9 +57,14 @@ export default async function InboxPage() {
 
         <div className="grid gap-4">
           {materials.length === 0 ? (
-            <div className="rounded-[28px] border border-dashed border-[color:var(--line)] px-6 py-10 text-sm text-[color:var(--muted)]">
-              还没有素材。先新增一条文章、反馈或项目描述，再去详情页运行分析。
-            </div>
+            <EmptyStatePanel
+              title="还没有素材进入 Inbox"
+              description="先新增一条文章、反馈或项目描述。保存后会直接进入详情页，你可以马上运行 analyze workflow。"
+              actions={[
+                { href: "/onboarding", label: "先补画像" },
+                { href: "/", label: "返回总览" },
+              ]}
+            />
           ) : (
             materials.map((material) => (
               <Link

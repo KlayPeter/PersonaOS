@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { ArtifactGenerator } from "@/components/artifact-generator";
+import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { formatDate } from "@/lib/utils";
 import { artifactTypeOptions } from "@/server/artifacts/registry";
 import { listArtifacts } from "@/server/domain/artifacts";
@@ -42,9 +43,14 @@ export default async function ArtifactsPage() {
 
         <div className="grid gap-8">
           {grouped.length === 0 ? (
-            <p className="text-sm leading-7 text-[color:var(--muted)]">
-              还没有生成过资产。先在 Rulebase 中确认规则，再生成第一版导出文档。
-            </p>
+            <EmptyStatePanel
+              title="还没有任何资产版本"
+              description="先在 Rulebase 里确认正式规则，再回来生成第一版 AGENTS.md、writing-style.md 或 personal-system.md。"
+              actions={[
+                { href: "/rulebase", label: "去看规则库" },
+                { href: "/proposals", label: "去处理提案" },
+              ]}
+            />
           ) : (
             grouped.map(([type, entries]) => (
               <section key={type} className="flex flex-col gap-4">

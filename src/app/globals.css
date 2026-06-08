@@ -307,3 +307,13 @@ button {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+.empty-state-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 1.75rem;
+  background: rgba(255, 252, 248, 0.82);
+  padding: 1.35rem 1.4rem;
+}

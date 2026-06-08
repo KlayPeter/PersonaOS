@@ -77,6 +77,12 @@ npm test
 npm run evals:materials
 ```
 
+8. 运行 MVP 验收故事
+
+```bash
+npm run verify:mvp
+```
+
 默认数据库端口使用 `3307`，避免和本机已有 MySQL 冲突。
 
 ## 环境变量
@@ -138,4 +144,8 @@ docs/
   - proposal 方向命中率
   - proposal 空泛率
   - proposal 可执行率
+- `npm run verify:mvp` 会自动跑通两条验收故事：
+  - 写作者沉淀风格
+  - 开发者生成 `AGENTS.md`
+- 完整人工演示顺序记录在 [docs/03-MVP-验收演示脚本.md](/Users/admin/Desktop/Peter/PersonaOS/docs/03-MVP-验收演示脚本.md)
 - 当前“空泛规则”判断偏向识别泛化、没有动作约束的提案；“可执行规则”判断偏向识别包含必须、优先、步骤或边界约束的提案。

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -196,7 +197,15 @@ export function PlaygroundConsole({
       ) : null}
 
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
-      {error ? <p className="text-sm text-rose-700">{error}</p> : null}
+      {error ? (
+        <div className="flex flex-col gap-2 text-sm text-rose-700">
+          <p>{error}</p>
+          <p className="text-[color:var(--muted)]">
+            如果提示没有可用资产，先去 <Link href="/artifacts" className="underline underline-offset-4">资产页</Link> 生成对应文档；
+            如果反馈提交失败，可以到 <Link href="/runs" className="underline underline-offset-4">运行页</Link> 查看 workflow 明细。
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

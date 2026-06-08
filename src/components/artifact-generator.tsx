@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -132,7 +133,15 @@ export function ArtifactGenerator({
       ) : null}
 
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
-      {error ? <p className="text-sm text-rose-700">{error}</p> : null}
+      {error ? (
+        <div className="flex flex-col gap-2 text-sm text-rose-700">
+          <p>{error}</p>
+          <p className="text-[color:var(--muted)]">
+            如果提示没有正式规则，先去 <Link href="/proposals" className="underline underline-offset-4">处理提案</Link>，
+            再到 <Link href="/rulebase" className="underline underline-offset-4">规则库</Link> 确认是否已经入库。
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

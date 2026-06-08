@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -40,7 +41,15 @@ export function AnalyzeButton({ materialId }: { materialId: string }) {
         {isPending ? "分析中..." : "运行 analyze workflow"}
       </button>
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
-      {error ? <p className="text-sm text-rose-700">{error}</p> : null}
+      {error ? (
+        <div className="flex flex-col gap-2 text-sm text-rose-700">
+          <p>{error}</p>
+          <p className="text-[color:var(--muted)]">
+            如果分析结果异常，可以到 <Link href="/onboarding" className="underline underline-offset-4">画像页</Link> 补上下文，
+            或去 <Link href="/runs" className="underline underline-offset-4">运行页</Link> 查看 step 和 LLM 快照。
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

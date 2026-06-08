@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { RuleEditor } from "@/components/rule-editor";
 import { formatDate } from "@/lib/utils";
 import { listRules } from "@/server/domain/rules";
@@ -48,7 +49,11 @@ export default async function RulebasePage() {
 
         <div className="grid gap-8">
           {grouped.length === 0 ? (
-            <p className="text-sm leading-7 text-[color:var(--muted)]">还没有正式规则，先去处理 proposals。</p>
+            <EmptyStatePanel
+              title="正式规则库还是空的"
+              description="Rulebase 只接收已经过人工确认的内容。先去提案页接受或编辑后接受 proposal，再回来生成正式规则。"
+              actions={[{ href: "/proposals", label: "去处理提案" }]}
+            />
           ) : (
             grouped.map(([category, entries]) => (
               <section key={category} className="flex flex-col gap-4">
