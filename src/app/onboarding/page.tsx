@@ -22,6 +22,9 @@ export default async function OnboardingPage() {
           <p>
             文档要求第一阶段至少跑通：`创建 workspace`、`填写 profile`、`后续分析可复用画像上下文`。
           </p>
+          <p className="mt-3">
+            现在也支持根据当前填写内容先生成一版初始 `Personal Profile`，再决定是否手动微调。
+          </p>
         </div>
       </section>
 

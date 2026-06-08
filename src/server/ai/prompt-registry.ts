@@ -19,6 +19,11 @@ export const promptRegistry = {
     systemPromptPath: "src/server/ai/prompts/feedback-to-proposal/system.md",
     purpose: "把 Playground 反馈回流成新的 proposal。",
   },
+  "workspace-profile-init": {
+    version: "v1",
+    systemPromptPath: "src/server/ai/prompts/workspace-profile-init/system.md",
+    purpose: "根据 onboarding 输入生成初始 Persona Profile 摘要。",
+  },
 } as const;
 
 export type PromptName = keyof typeof promptRegistry;

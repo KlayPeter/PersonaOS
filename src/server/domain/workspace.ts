@@ -1,5 +1,7 @@
 import type { Prisma, Workspace } from "@prisma/client";
 
+import { workspaceProfileSummarySchema } from "@/server/ai/schemas/workspace-profile";
+import { getAIService } from "@/server/ai/services/ai-service";
 import { getPrismaClient } from "@/server/db/client";
 
 export type WorkspaceProfile = {
@@ -96,4 +98,23 @@ export async function updateWorkspaceProfile(input: {
       profileSummary: input.profileSummary,
     },
   });
+}
+
+export async function generateInitialWorkspaceProfile(input: {
+  name: string;
+  description: string;
+  identity: string;
+  primaryScenarios: string[];
+  rememberNotes: string;
+  dislikedBehaviors: string[];
+  outputPreferences: string[];
+  exportGoals: string[];
+}) {
+  const ai = getAIService();
+  const result = await ai.generateWorkspaceProfileSummary(input);
+
+  return {
+    summary: workspaceProfileSummarySchema.parse(result.output).profileSummary,
+    log: result.log,
+  };
 }

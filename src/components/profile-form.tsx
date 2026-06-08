@@ -59,6 +59,46 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
     });
   }
 
+  function generateProfileSummary() {
+    startTransition(async () => {
+      setMessage("");
+      setError("");
+
+      const response = await fetch("/api/workspace/generate-profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          description: form.description,
+          identity: form.identity,
+          primaryScenarios: splitListInput(form.primaryScenarios),
+          rememberNotes: form.rememberNotes,
+          dislikedBehaviors: splitListInput(form.dislikedBehaviors),
+          outputPreferences: splitListInput(form.outputPreferences),
+          exportGoals: splitListInput(form.exportGoals),
+        }),
+      });
+
+      const payload = (await response.json()) as {
+        error?: string;
+        profileSummary?: string;
+        log?: { promptName: string; promptVersion: string };
+      };
+
+      if (!response.ok || !payload.profileSummary) {
+        setError(payload.error ?? "生成初始画像失败。");
+        return;
+      }
+
+      setForm((current) => ({ ...current, profileSummary: payload.profileSummary! }));
+      setMessage(
+        `已生成初始画像摘要${payload.log ? `（${payload.log.promptName} ${payload.log.promptVersion}）` : ""}，确认后记得保存。`,
+      );
+    });
+  }
+
   return (
     <section className="panel flex flex-col gap-8">
       <div className="flex flex-col gap-2">
@@ -145,11 +185,20 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
             rows={5}
             value={form.profileSummary}
             onChange={(event) => updateField("profileSummary", event.target.value)}
+            placeholder="也可以点击下方按钮，根据上面的填写内容自动生成初始 Persona Profile。"
           />
         </label>
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={generateProfileSummary}
+          disabled={isPending}
+        >
+          {isPending ? "处理中..." : "生成初始画像摘要"}
+        </button>
         <button type="button" className="primary-button" onClick={submitForm} disabled={isPending}>
           {isPending ? "保存中..." : "保存 Persona Profile"}
         </button>

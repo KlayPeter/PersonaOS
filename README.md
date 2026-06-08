@@ -17,6 +17,7 @@ Workspace Profile
 - Next.js 16 + TypeScript + Tailwind CSS 工程骨架
 - Prisma 7 + MySQL 8.4 本地开发环境
 - 默认 workspace / 用户画像初始化与编辑
+- 支持根据 onboarding 填写内容生成初始 Persona Profile 摘要
 - Inbox 文本素材录入、列表、详情页
 - `analyze_material` workflow
 - `WorkflowRun` / `StepRun` / `LLMRun` 留痕
@@ -114,6 +115,7 @@ AI_PROVIDER="mock"
 
 - `/`：项目总览页
 - `/onboarding`：用户画像编辑
+  - 支持生成初始画像摘要
 - `/inbox`：素材录入与列表
 - `/inbox/[id]`：素材详情、洞察与提案
 - `/proposals`：审核候选规则提案

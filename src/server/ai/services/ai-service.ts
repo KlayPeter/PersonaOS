@@ -3,6 +3,7 @@ import type { ArtifactType, PlaygroundFeedback } from "@prisma/client";
 import type { FeedbackProposalOutput } from "@/server/ai/schemas/feedback-proposal";
 import type { ProposalOutput } from "@/server/ai/schemas/proposal";
 import type { InsightOutput } from "@/server/ai/schemas/insight";
+import type { WorkspaceProfileSummaryOutput } from "@/server/ai/schemas/workspace-profile";
 import { getPromptSpec, type PromptName } from "@/server/ai/prompt-registry";
 
 type LLMLog = {
@@ -74,6 +75,17 @@ type ConvertFeedbackToProposalInput = {
   output: string;
   feedbackType: PlaygroundFeedback;
   feedbackText?: string;
+};
+
+type GenerateWorkspaceProfileSummaryInput = {
+  name: string;
+  description: string;
+  identity: string;
+  primaryScenarios: string[];
+  rememberNotes: string;
+  dislikedBehaviors: string[];
+  outputPreferences: string[];
+  exportGoals: string[];
 };
 
 function buildEvidence(content: string) {
@@ -287,6 +299,22 @@ function buildPlaygroundOutput(input: RunPlaygroundInput) {
   ].join("\n");
 }
 
+function buildWorkspaceProfileSummary(input: GenerateWorkspaceProfileSummaryInput) {
+  const scenarios = input.primaryScenarios.length > 0 ? input.primaryScenarios.join("、") : "未明确主要场景";
+  const preferences = input.outputPreferences.length > 0 ? input.outputPreferences.join("、") : "输出偏好仍待补充";
+  const dislikes = input.dislikedBehaviors.length > 0 ? input.dislikedBehaviors.join("、") : "暂未强调明显禁忌";
+  const goals = input.exportGoals.length > 0 ? input.exportGoals.join("、") : "导出目标仍待补充";
+
+  return [
+    `${input.name} 当前主要以「${input.identity || "未明确身份"}」的身份使用 PersonaOS，核心场景包括：${scenarios}。`,
+    `在协作与输出上，优先追求 ${preferences}，并明确避免 ${dislikes}。`,
+    input.rememberNotes
+      ? `系统后续分析和生成时应长期记住：${input.rememberNotes}。`
+      : "系统后续分析时应继续从素材中补全长期记忆点。",
+    `当前最重要的导出目标是：${goals}。`,
+  ].join("");
+}
+
 function mapFeedbackToProposal(
   input: ConvertFeedbackToProposalInput,
 ): FeedbackProposalOutput["proposals"] {
@@ -438,6 +466,25 @@ export class AIService {
       output,
       log: buildLog({
         promptName: "feedback-to-proposal",
+        request: input,
+        response: output,
+        durationMs: Date.now() - startedAt,
+      }),
+    };
+  }
+
+  async generateWorkspaceProfileSummary(
+    input: GenerateWorkspaceProfileSummaryInput,
+  ): Promise<AIResult<WorkspaceProfileSummaryOutput>> {
+    const startedAt = Date.now();
+    const output = {
+      profileSummary: buildWorkspaceProfileSummary(input),
+    };
+
+    return {
+      output,
+      log: buildLog({
+        promptName: "workspace-profile-init",
         request: input,
         response: output,
         durationMs: Date.now() - startedAt,
