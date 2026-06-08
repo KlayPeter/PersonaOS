@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 type ArtifactType = "agents_md" | "writing_style" | "personal_system";
 
 type ArtifactRecord = {
@@ -29,6 +32,7 @@ export function ArtifactGenerator({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [latestArtifact, setLatestArtifact] = useState<ArtifactRecord | null>(null);
+  const [polishEnabled, setPolishEnabled] = useState(true);
 
   function handleGenerate(type: ArtifactType) {
     startTransition(async () => {
@@ -40,7 +44,7 @@ export function ArtifactGenerator({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ type }),
+        body: JSON.stringify({ type, polish: polishEnabled }),
       });
 
       const payload = (await response.json()) as {
@@ -85,31 +89,36 @@ export function ArtifactGenerator({
 
   return (
     <div className="flex flex-col gap-6">
+      <label className="flex items-start gap-3 rounded-[1.4rem] border border-[color:var(--line)] bg-[rgba(255,252,248,0.82)] px-4 py-4 text-sm text-[color:var(--muted)]">
+        <input
+          type="checkbox"
+          checked={polishEnabled}
+          onChange={(event) => setPolishEnabled(event.target.checked)}
+          className="mt-1 size-4 accent-[color:var(--accent)]"
+        />
+        <span>生成后增加一次可选润色步骤，只调整 Markdown 的表述和节奏，不改动核心规则含义。</span>
+      </label>
+
       <div className="grid gap-4 md:grid-cols-3">
         {options.map((option) => (
-          <article key={option.type} className="panel-muted flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
+          <Card key={option.type} variant="muted" className="flex flex-col gap-4">
+            <CardHeader>
               <p className="eyebrow">Generate</p>
-              <h3 className="font-serif text-2xl text-[color:var(--ink)]">{option.title}</h3>
-              <p className="text-sm leading-7 text-[color:var(--muted)]">{option.description}</p>
-            </div>
+              <CardTitle>{option.title}</CardTitle>
+              <CardDescription>{option.description}</CardDescription>
+            </CardHeader>
 
             <div className="mt-auto">
-              <button
-                type="button"
-                className="primary-button"
-                onClick={() => handleGenerate(option.type)}
-                disabled={isPending}
-              >
+              <Button onClick={() => handleGenerate(option.type)} disabled={isPending}>
                 {isPending ? "生成中..." : `生成 ${option.filename}`}
-              </button>
+              </Button>
             </div>
-          </article>
+          </Card>
         ))}
       </div>
 
       {latestArtifact ? (
-        <section className="panel flex flex-col gap-5">
+        <Card variant="panel" className="flex flex-col gap-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="eyebrow">Latest Output</p>
@@ -119,17 +128,19 @@ export function ArtifactGenerator({
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <button type="button" className="secondary-button" onClick={copyLatest}>
+              <Button variant="secondary" onClick={copyLatest}>
                 复制 Markdown
-              </button>
-              <button type="button" className="secondary-button" onClick={downloadLatest}>
+              </Button>
+              <Button variant="secondary" onClick={downloadLatest}>
                 下载文件
-              </button>
+              </Button>
             </div>
           </div>
 
-          <pre className="artifact-preview">{latestArtifact.content}</pre>
-        </section>
+          <CardContent>
+            <pre className="artifact-preview">{latestArtifact.content}</pre>
+          </CardContent>
+        </Card>
       ) : null}
 
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}

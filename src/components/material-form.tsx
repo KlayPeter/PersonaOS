@@ -4,6 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { splitListInput } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const materialTypes = [
   { value: "article", label: "文章" },
@@ -69,35 +74,35 @@ export function MaterialForm() {
   }
 
   return (
-    <section className="panel flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
+    <Card variant="panel" className="flex flex-col gap-6">
+      <CardHeader>
         <p className="eyebrow">Inbox / New Material</p>
-        <h2 className="font-serif text-3xl text-[color:var(--ink)]">持续喂入素材</h2>
-        <p className="text-sm leading-7 text-[color:var(--muted)]">
+        <CardTitle className="text-3xl">持续喂入素材</CardTitle>
+        <CardDescription>
           第一阶段先支持文本素材，重点是让输入能进入 Inbox，并能在后续被 workflow 分析。
-        </p>
-      </div>
+        </CardDescription>
+      </CardHeader>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <label className="field">
           <span>标题</span>
-          <input value={form.title} onChange={(event) => updateField("title", event.target.value)} />
+          <Input value={form.title} onChange={(event) => updateField("title", event.target.value)} />
         </label>
 
         <label className="field">
           <span>素材类型</span>
-          <select value={form.type} onChange={(event) => updateField("type", event.target.value)}>
+          <Select value={form.type} onChange={(event) => updateField("type", event.target.value)}>
             {materialTypes.map((type) => (
               <option key={type.value} value={type.value}>
                 {type.label}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
 
         <label className="field lg:col-span-2">
           <span>一句说明</span>
-          <textarea
+          <Textarea
             rows={3}
             value={form.summary}
             onChange={(event) => updateField("summary", event.target.value)}
@@ -106,7 +111,7 @@ export function MaterialForm() {
 
         <label className="field lg:col-span-2">
           <span>标签</span>
-          <input
+          <Input
             value={form.tags}
             onChange={(event) => updateField("tags", event.target.value)}
             placeholder="例如：写作, 结构化, AI 协作"
@@ -115,7 +120,7 @@ export function MaterialForm() {
 
         <label className="field lg:col-span-2">
           <span>素材正文</span>
-          <textarea
+          <Textarea
             rows={10}
             value={form.content}
             onChange={(event) => updateField("content", event.target.value)}
@@ -125,11 +130,11 @@ export function MaterialForm() {
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
-        <button type="button" className="primary-button" onClick={submitMaterial} disabled={isPending}>
+        <Button onClick={submitMaterial} disabled={isPending}>
           {isPending ? "保存中..." : "保存到 Inbox"}
-        </button>
+        </Button>
         {error ? <p className="text-sm text-rose-700">{error}</p> : null}
       </div>
-    </section>
+    </Card>
   );
 }

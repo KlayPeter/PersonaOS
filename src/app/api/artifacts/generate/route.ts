@@ -4,13 +4,14 @@ import { generateArtifactWorkflow } from "@/server/domain/artifacts";
 
 const payloadSchema = z.object({
   type: z.enum(["agents_md", "writing_style", "personal_system"]),
+  polish: z.boolean().default(false),
 });
 
 export async function POST(request: Request) {
   try {
     const json = await request.json();
     const payload = payloadSchema.parse(json);
-    const result = await generateArtifactWorkflow(payload.type);
+    const result = await generateArtifactWorkflow(payload.type, { polish: payload.polish });
 
     return Response.json({
       artifact: result.result,

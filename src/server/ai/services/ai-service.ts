@@ -1,5 +1,6 @@
 import type { ArtifactType, PlaygroundFeedback } from "@prisma/client";
 
+import type { ArtifactPolishOutput } from "@/server/ai/schemas/artifact-polish";
 import type { FeedbackProposalOutput } from "@/server/ai/schemas/feedback-proposal";
 import type { ProposalOutput } from "@/server/ai/schemas/proposal";
 import type { InsightOutput } from "@/server/ai/schemas/insight";
@@ -86,6 +87,12 @@ type GenerateWorkspaceProfileSummaryInput = {
   dislikedBehaviors: string[];
   outputPreferences: string[];
   exportGoals: string[];
+};
+
+type PolishArtifactInput = {
+  type: ArtifactType;
+  title: string;
+  content: string;
 };
 
 function buildEvidence(content: string) {
@@ -315,6 +322,15 @@ function buildWorkspaceProfileSummary(input: GenerateWorkspaceProfileSummaryInpu
   ].join("");
 }
 
+function polishArtifactMarkdown(content: string) {
+  return content
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/修改后优先通过/g, "修改后优先采用")
+    .replace(/保留可追踪输入输出/g, "保留可追踪的输入输出")
+    .trim();
+}
+
 function mapFeedbackToProposal(
   input: ConvertFeedbackToProposalInput,
 ): FeedbackProposalOutput["proposals"] {
@@ -485,6 +501,23 @@ export class AIService {
       output,
       log: buildLog({
         promptName: "workspace-profile-init",
+        request: input,
+        response: output,
+        durationMs: Date.now() - startedAt,
+      }),
+    };
+  }
+
+  async polishArtifact(input: PolishArtifactInput): Promise<AIResult<ArtifactPolishOutput>> {
+    const startedAt = Date.now();
+    const output = {
+      content: polishArtifactMarkdown(input.content),
+    };
+
+    return {
+      output,
+      log: buildLog({
+        promptName: "artifact-polish",
         request: input,
         response: output,
         durationMs: Date.now() - startedAt,

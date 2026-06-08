@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
 type ArtifactType = "agents_md" | "writing_style" | "personal_system";
 type FeedbackType =
   | "good"
@@ -131,34 +136,34 @@ export function PlaygroundConsole({
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="panel flex flex-col gap-6">
+      <Card variant="panel" className="flex flex-col gap-6">
         <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
           <label className="field">
             <span>选择资产</span>
-            <select value={artifactType} onChange={(event) => setArtifactType(event.target.value as ArtifactType)}>
+            <Select value={artifactType} onChange={(event) => setArtifactType(event.target.value as ArtifactType)}>
               {artifactOptions.map((option) => (
                 <option key={option.type} value={option.type}>
                   {option.title}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
 
           <label className="field">
             <span>测试任务</span>
-            <textarea rows={4} value={task} onChange={(event) => setTask(event.target.value)} />
+            <Textarea rows={4} value={task} onChange={(event) => setTask(event.target.value)} />
           </label>
         </div>
 
         <div className="flex">
-          <button type="button" className="primary-button" onClick={runPlayground} disabled={isPending}>
+          <Button onClick={runPlayground} disabled={isPending}>
             {isPending ? "运行中..." : "运行 Playground"}
-          </button>
+          </Button>
         </div>
-      </section>
+      </Card>
 
       {latestRun ? (
-        <section className="panel flex flex-col gap-5">
+        <Card variant="panel" className="flex flex-col gap-5">
           <div>
             <p className="eyebrow">Latest Playground Output</p>
             <h3 className="font-serif text-3xl text-[color:var(--ink)]">
@@ -168,10 +173,10 @@ export function PlaygroundConsole({
 
           <pre className="artifact-preview">{latestRun.output}</pre>
 
-          <div className="panel-muted flex flex-col gap-4">
+          <Card variant="muted" className="flex flex-col gap-4">
             <label className="field">
               <span>补充反馈</span>
-              <textarea
+              <Textarea
                 rows={3}
                 value={feedbackText}
                 onChange={(event) => setFeedbackText(event.target.value)}
@@ -181,19 +186,18 @@ export function PlaygroundConsole({
 
             <div className="flex flex-wrap gap-3">
               {feedbackOptions.map((option) => (
-                <button
+                <Button
                   key={option.value}
-                  type="button"
-                  className="secondary-button"
+                  variant="secondary"
                   onClick={() => sendFeedback(option.value)}
                   disabled={isPending}
                 >
                   {option.label}
-                </button>
+                </Button>
               ))}
             </div>
-          </div>
-        </section>
+          </Card>
+        </Card>
       ) : null}
 
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}

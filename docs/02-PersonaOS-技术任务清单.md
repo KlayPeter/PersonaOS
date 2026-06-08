@@ -23,7 +23,7 @@
 - [x] `P0` 初始化 Next.js + TypeScript 项目
 - [x] `P0` 配置 ESLint、Prettier、基础 tsconfig
 - [x] `P0` 接入 Tailwind CSS
-- [ ] `P1` 接入 shadcn/ui 基础组件
+- [x] `P1` 接入 shadcn/ui 基础组件
 - [x] `P0` 建立 `src/app`、`src/server`、`docs` 目录结构
 - [x] `P0` 建立环境变量模板 `.env.example`
 
@@ -51,7 +51,7 @@
 - [x] `P0` 定义模型调用接口
 - [x] `P0` 接入 JSON schema 校验
 - [x] `P0` 统一模型错误处理
-- [ ] `P1` 记录 token、耗时、失败原因
+- [x] `P1` 记录 token、耗时、失败原因
 
 ## 3. Epic 1：用户与 Workspace
 
@@ -95,7 +95,7 @@
 - [x] `P0` 实现新增素材表单
 - [x] `P0` 支持选择素材类型
 - [x] `P1` 支持标签
-- [ ] `P1` 支持删除素材
+- [x] `P1` 支持删除素材
 - [x] `P1` 建立 `/app/inbox/[id]` 详情页
 
 ### 4.3 API
@@ -103,7 +103,7 @@
 - [x] `P0` 实现 `POST /api/materials`
 - [x] `P0` 实现 `GET /api/materials`
 - [x] `P0` 实现 `GET /api/materials/:id`
-- [ ] `P1` 实现 `DELETE /api/materials/:id`
+- [x] `P1` 实现 `DELETE /api/materials/:id`
 
 验收标准：
 
@@ -124,8 +124,8 @@
 - [x] `P0` 定义 `Insight` 输出 schema
 - [x] `P0` 创建 `rule-proposal-generation` prompt
 - [x] `P0` 定义 `RuleProposal` 输出 schema
-- [ ] `P1` 为 prompt 增加 few-shot 示例
-- [ ] `P1` 增加 prompt version 字段
+- [x] `P1` 为 prompt 增加 few-shot 示例
+- [x] `P1` 增加 prompt version 字段
 
 ### 5.3 Harness Workflow
 
@@ -235,7 +235,7 @@
 - [x] `P0` 创建 `writing-style.md` 模板
 - [x] `P0` 创建 `personal-system.md` 模板
 - [x] `P0` 创建规则分类到模板段落的映射逻辑
-- [ ] `P1` 增加 LLM 润色可选步骤
+- [x] `P1` 增加 LLM 润色可选步骤
 
 ### 8.3 Harness Workflow
 
@@ -264,12 +264,12 @@
 ### 9.1 数据模型
 
 - [x] `P0` 创建 `PlaygroundRun` 表
-- [ ] `P1` 增加 feedback 枚举和自定义反馈文本
+- [x] `P1` 增加 feedback 枚举和自定义反馈文本
 
 ### 9.2 Prompt 与 Schema
 
 - [x] `P0` 创建 `feedback-to-proposal` prompt
-- [ ] `P0` 定义反馈转提案输出 schema
+- [x] `P0` 定义反馈转提案输出 schema
 - [x] `P0` 定义反馈转提案输出 schema
 - [x] `P0` 创建 `runPlayground()` 调用入口
 
@@ -288,7 +288,7 @@
 - [x] `P0` 实现 `playground_run` workflow
 - [x] `P0` 实现 `feedback_to_proposal` workflow
 - [x] `P0` 从反馈生成新 proposal
-- [ ] `P1` 保存反馈前后上下文
+- [x] `P1` 保存反馈前后上下文
 
 验收标准：
 
@@ -373,12 +373,12 @@
 
 如果你想立刻开工，建议第一周只做这些：
 
-- [ ] 初始化 Next.js + Prisma + MySQL
-- [ ] 建好 `User/Workspace/Material/WorkflowRun/StepRun/LLMRun` 表
-- [ ] 做 Onboarding 页面
-- [ ] 做 Inbox 页面
-- [ ] 接一个最小版 `analyze_material` workflow
-- [ ] 能从一条素材生成 mock proposals
+- [x] 初始化 Next.js + Prisma + MySQL
+- [x] 建好 `User/Workspace/Material/WorkflowRun/StepRun/LLMRun` 表
+- [x] 做 Onboarding 页面
+- [x] 做 Inbox 页面
+- [x] 接一个最小版 `analyze_material` workflow
+- [x] 能从一条素材生成 mock proposals
 
 这一周的目标不是“做完 MVP”，而是：
 

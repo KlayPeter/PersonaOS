@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 
 import { AnalyzeButton } from "@/components/analyze-button";
+import { DeleteMaterialButton } from "@/components/delete-material-button";
 import { EmptyStatePanel } from "@/components/empty-state-panel";
 import { formatDate } from "@/lib/utils";
 import { getMaterialDetail, serializeMaterialTags } from "@/server/domain/materials";
@@ -90,6 +91,7 @@ export default async function MaterialDetailPage({
               该按钮会依次执行：加载画像上下文、提炼 `insights`、生成 `rule proposals`、落库并更新素材状态。
             </p>
             <AnalyzeButton materialId={material.id} />
+            <DeleteMaterialButton materialId={material.id} title={material.title} />
           </div>
         </div>
 

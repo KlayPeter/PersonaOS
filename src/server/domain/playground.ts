@@ -7,6 +7,10 @@ import { getLatestArtifactByType } from "@/server/domain/artifacts";
 import { getOrCreateDefaultWorkspace, serializeWorkspaceProfile } from "@/server/domain/workspace";
 import { runWorkflow } from "@/server/harness/workflow-runner";
 
+function serializeContext(value: unknown) {
+  return JSON.stringify(value, null, 2);
+}
+
 export async function listPlaygroundRuns() {
   const prisma = getPrismaClient();
   const workspace = await getOrCreateDefaultWorkspace();
@@ -147,12 +151,27 @@ export async function feedbackToProposalWorkflow(input: {
           feedbackText: input.feedbackText ?? "",
         },
         async () => {
+          const beforeContext = serializeContext({
+            artifactType: run.artifactType,
+            sourceArtifactId: run.sourceArtifactId,
+            sourceArtifactTitle: run.sourceArtifact?.title ?? null,
+            inputTask: run.inputTask,
+            output: run.output,
+            feedbackType: input.feedbackType,
+            feedbackText: input.feedbackText ?? "",
+          });
+
           if (input.feedbackType === "good") {
             const updated = await prisma.playgroundRun.update({
               where: { id: run.id },
               data: {
                 feedback: input.feedbackType,
                 feedbackText: input.feedbackText,
+                feedbackContextBefore: beforeContext,
+                feedbackContextAfter: serializeContext({
+                  acceptedAsPositiveSignal: true,
+                  generatedProposalIds: [],
+                }),
               },
             });
 
@@ -167,7 +186,7 @@ export async function feedbackToProposalWorkflow(input: {
             feedbackText: input.feedbackText,
           });
 
-          return { run, llmResult: result };
+          return { run, llmResult: result, beforeContext };
         },
       );
 
@@ -213,6 +232,12 @@ export async function feedbackToProposalWorkflow(input: {
             data: {
               feedback: input.feedbackType,
               feedbackText: input.feedbackText,
+              feedbackContextBefore: feedbackContext.beforeContext,
+              feedbackContextAfter: serializeContext({
+                generatedProposalIds: created.map((proposal) => proposal.id),
+                generatedProposalTitles: created.map((proposal) => proposal.title),
+                proposalCount: created.length,
+              }),
             },
           });
 

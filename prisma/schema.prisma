@@ -270,18 +270,20 @@ model Artifact {
 }
 
 model PlaygroundRun {
-  id              String              @id @default(cuid())
-  workspaceId     String
-  sourceArtifactId String?
-  artifactType    ArtifactType
-  inputTask       String              @db.Text
-  output          String              @db.LongText
-  feedback        PlaygroundFeedback?
-  feedbackText    String?             @db.Text
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
-  workspace       Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  sourceArtifact  Artifact?           @relation(fields: [sourceArtifactId], references: [id], onDelete: SetNull)
+  id                    String              @id @default(cuid())
+  workspaceId           String
+  sourceArtifactId      String?
+  artifactType          ArtifactType
+  inputTask             String              @db.Text
+  output                String              @db.LongText
+  feedback              PlaygroundFeedback?
+  feedbackText          String?             @db.Text
+  feedbackContextBefore String?             @db.LongText
+  feedbackContextAfter  String?             @db.LongText
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  workspace             Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceArtifact        Artifact?           @relation(fields: [sourceArtifactId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId, artifactType, createdAt])
 }

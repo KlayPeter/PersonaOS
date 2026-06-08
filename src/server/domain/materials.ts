@@ -71,6 +71,29 @@ export async function createMaterial(input: {
   });
 }
 
+export async function deleteMaterial(materialId: string) {
+  const prisma = getPrismaClient();
+  const workspace = await getOrCreateDefaultWorkspace();
+  const existing = await prisma.material.findFirst({
+    where: {
+      id: materialId,
+      workspaceId: workspace.id,
+    },
+  });
+
+  if (!existing) {
+    throw new Error("素材不存在。");
+  }
+
+  await prisma.material.delete({
+    where: {
+      id: existing.id,
+    },
+  });
+
+  return existing;
+}
+
 export function serializeMaterialTags(value: Prisma.JsonValue | null | undefined) {
   return jsonArrayToStrings(value);
 }

@@ -1,5 +1,6 @@
 import type { ArtifactType } from "@prisma/client";
 
+import { getAIService } from "@/server/ai/services/ai-service";
 import { artifactMetadata } from "@/server/artifacts/registry";
 import { compileArtifactMarkdown } from "@/server/artifacts/compilers/markdown";
 import { getPrismaClient } from "@/server/db/client";
@@ -44,9 +45,10 @@ export async function getLatestArtifacts() {
   return latestByType;
 }
 
-export async function generateArtifactWorkflow(type: ArtifactType) {
+export async function generateArtifactWorkflow(type: ArtifactType, options?: { polish?: boolean }) {
   const prisma = getPrismaClient();
   const workspace = await getOrCreateDefaultWorkspace();
+  const ai = getAIService();
 
   return runWorkflow(
     {
@@ -91,9 +93,31 @@ export async function generateArtifactWorkflow(type: ArtifactType) {
         async () => compileArtifactMarkdown(type, rules),
       );
 
+      const polishedContent = await workflow.step(
+        "finalize_artifact_content",
+        {
+          type,
+          polish: options?.polish ?? false,
+          draftLength: content.length,
+        },
+        async ({ recordLLMRun }) => {
+          if (!options?.polish) {
+            return content;
+          }
+
+          const result = await ai.polishArtifact({
+            type,
+            title: artifactMetadata[type].title,
+            content,
+          });
+          await recordLLMRun(result.log);
+          return result.output.content;
+        },
+      );
+
       const artifact = await workflow.step(
         "persist_artifact",
-        { type, length: content.length },
+        { type, length: polishedContent.length, polished: options?.polish ?? false },
         async () => {
           const latest = await prisma.artifact.findFirst({
             where: {
@@ -111,7 +135,7 @@ export async function generateArtifactWorkflow(type: ArtifactType) {
               workspaceId: workspace.id,
               type,
               title: metadata.title,
-              content,
+              content: polishedContent,
               version,
             },
           });
@@ -121,7 +145,7 @@ export async function generateArtifactWorkflow(type: ArtifactType) {
               workspaceId: workspace.id,
               changeType: "artifact_generated",
               summary: `生成 ${metadata.title} v${version}`,
-              detail: `基于当前 Rulebase 生成了 ${metadata.title} 第 ${version} 个版本。`,
+              detail: `基于当前 Rulebase 生成了 ${metadata.title} 第 ${version} 个版本${options?.polish ? "，并执行了可选润色。" : "。"}`,
             },
           });
 

@@ -18,17 +18,18 @@ Workspace Profile
 - Prisma 7 + MySQL 8.4 本地开发环境
 - 默认 workspace / 用户画像初始化与编辑
 - 支持根据 onboarding 填写内容生成初始 Persona Profile 摘要
-- Inbox 文本素材录入、列表、详情页
+- Inbox 文本素材录入、列表、详情页与删除
 - `analyze_material` workflow
 - `WorkflowRun` / `StepRun` / `LLMRun` 留痕
 - `Insight` 与 `RuleProposal` 落库和页面回看
 - Proposal 审核页，支持接受、拒绝、编辑后接受
 - `apply_proposal` workflow、Rulebase 与 Changelog
 - 正式规则的编辑、归档与来源追踪
-- `/artifacts` 资产页，支持生成、预览、复制和下载 Markdown
+- `/artifacts` 资产页，支持生成、可选润色、预览、复制和下载 Markdown
 - `generate_artifact` workflow 与 Artifact 版本保存
 - 已支持 `AGENTS.md`、`writing-style.md`、`personal-system.md`
-- `/playground` 测试场，支持用资产跑任务并把反馈回流成 proposal
+- `/playground` 测试场，支持用资产跑任务、记录反馈上下文并把反馈回流成 proposal
+- 已接入 `shadcn/ui` 基础组件并保留仓库原有视觉语言
 - `playground_run` / `feedback_to_proposal` workflow
 - 内置自动化测试与 `evals/materials` 回归样本
 - `/runs` 运行观测页，可查看 Workflow / Step / LLM 调用快照

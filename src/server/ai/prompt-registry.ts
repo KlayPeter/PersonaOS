@@ -19,6 +19,11 @@ export const promptRegistry = {
     systemPromptPath: "src/server/ai/prompts/feedback-to-proposal/system.md",
     purpose: "把 Playground 反馈回流成新的 proposal。",
   },
+  "artifact-polish": {
+    version: "v1",
+    systemPromptPath: "src/server/ai/prompts/artifact-polish/system.md",
+    purpose: "对已编译的 Markdown 资产做可选润色，但不改动核心规则含义。",
+  },
   "workspace-profile-init": {
     version: "v1",
     systemPromptPath: "src/server/ai/prompts/workspace-profile-init/system.md",

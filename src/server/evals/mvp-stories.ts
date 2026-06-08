@@ -139,7 +139,7 @@ async function runWriterStory(): Promise<StoryResult> {
     finalCategory: "writing",
   });
 
-  const artifactResult = await generateArtifactWorkflow("writing_style");
+  const artifactResult = await generateArtifactWorkflow("writing_style", { polish: true });
   assertCondition(
     artifactResult.result.content.includes("长文应保持信息密度，但必须使用层级结构和辅助图表。"),
     "writing-style.md 未包含写作者故事确认后的规则。",
@@ -163,6 +163,12 @@ async function runWriterStory(): Promise<StoryResult> {
     feedbackProposals.length > 0,
     "写作者故事没有从 Playground 反馈生成新 proposal。",
   );
+  const prisma = getPrismaClient();
+  const savedRun = await prisma.playgroundRun.findUnique({
+    where: { id: playgroundRun.result.id },
+  });
+  assertCondition(savedRun?.feedbackContextBefore, "写作者故事没有保存反馈前上下文。");
+  assertCondition(savedRun?.feedbackContextAfter, "写作者故事没有保存反馈后上下文。");
 
   return {
     story: "写作者沉淀风格",
@@ -175,6 +181,7 @@ async function runWriterStory(): Promise<StoryResult> {
       { label: "rule", value: rule.title },
       { label: "artifact", value: `${artifactResult.result.title} v${artifactResult.result.version}` },
       { label: "feedback proposal", value: feedbackProposalTitle },
+      { label: "feedback context", value: "saved" },
     ],
   };
 }
@@ -219,7 +226,7 @@ async function runDeveloperStory(): Promise<StoryResult> {
     finalCategory: "coding",
   });
 
-  const artifactResult = await generateArtifactWorkflow("agents_md");
+  const artifactResult = await generateArtifactWorkflow("agents_md", { polish: true });
   assertCondition(
     artifactResult.result.content.includes("开始改动前先说明影响范围"),
     "AGENTS.md 未包含开发者故事确认后的影响范围规则。",

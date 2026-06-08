@@ -4,6 +4,10 @@ import { useState, useTransition } from "react";
 
 import { splitListInput } from "@/lib/utils";
 import type { WorkspaceProfile } from "@/server/domain/workspace";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
   const [form, setForm] = useState({
@@ -100,24 +104,24 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
   }
 
   return (
-    <section className="panel flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
+    <Card variant="panel" className="flex flex-col gap-8">
+      <CardHeader>
         <p className="eyebrow">Onboarding / Workspace Profile</p>
-        <h2 className="font-serif text-4xl text-[color:var(--ink)]">先让 PersonaOS 认识你</h2>
-        <p className="max-w-3xl text-sm leading-7 text-[color:var(--muted)]">
+        <CardTitle className="text-4xl">先让 PersonaOS 认识你</CardTitle>
+        <CardDescription className="max-w-3xl">
           这份画像会成为后续 `analyze workflow` 的基础上下文。第一阶段先聚焦身份、使用场景、偏好、禁忌和导出目标。
-        </p>
-      </div>
+        </CardDescription>
+      </CardHeader>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <label className="field">
           <span>Workspace 名称</span>
-          <input value={form.name} onChange={(event) => updateField("name", event.target.value)} />
+          <Input value={form.name} onChange={(event) => updateField("name", event.target.value)} />
         </label>
 
         <label className="field">
           <span>身份定位</span>
-          <input
+          <Input
             value={form.identity}
             onChange={(event) => updateField("identity", event.target.value)}
             placeholder="开发者 / 写作者 / 产品设计实践者"
@@ -126,7 +130,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field lg:col-span-2">
           <span>空间描述</span>
-          <textarea
+          <Textarea
             rows={3}
             value={form.description}
             onChange={(event) => updateField("description", event.target.value)}
@@ -135,7 +139,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field">
           <span>主要使用场景</span>
-          <textarea
+          <Textarea
             rows={6}
             value={form.primaryScenarios}
             onChange={(event) => updateField("primaryScenarios", event.target.value)}
@@ -145,7 +149,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field">
           <span>希望 AI 记住什么</span>
-          <textarea
+          <Textarea
             rows={6}
             value={form.rememberNotes}
             onChange={(event) => updateField("rememberNotes", event.target.value)}
@@ -154,7 +158,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field">
           <span>讨厌的行为</span>
-          <textarea
+          <Textarea
             rows={6}
             value={form.dislikedBehaviors}
             onChange={(event) => updateField("dislikedBehaviors", event.target.value)}
@@ -163,7 +167,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field">
           <span>输出偏好</span>
-          <textarea
+          <Textarea
             rows={6}
             value={form.outputPreferences}
             onChange={(event) => updateField("outputPreferences", event.target.value)}
@@ -172,7 +176,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field">
           <span>导出目标</span>
-          <textarea
+          <Textarea
             rows={5}
             value={form.exportGoals}
             onChange={(event) => updateField("exportGoals", event.target.value)}
@@ -181,7 +185,7 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
 
         <label className="field">
           <span>画像摘要</span>
-          <textarea
+          <Textarea
             rows={5}
             value={form.profileSummary}
             onChange={(event) => updateField("profileSummary", event.target.value)}
@@ -191,20 +195,15 @@ export function ProfileForm({ initial }: { initial: WorkspaceProfile }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={generateProfileSummary}
-          disabled={isPending}
-        >
+        <Button variant="secondary" onClick={generateProfileSummary} disabled={isPending}>
           {isPending ? "处理中..." : "生成初始画像摘要"}
-        </button>
-        <button type="button" className="primary-button" onClick={submitForm} disabled={isPending}>
+        </Button>
+        <Button onClick={submitForm} disabled={isPending}>
           {isPending ? "保存中..." : "保存 Persona Profile"}
-        </button>
+        </Button>
         {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
         {error ? <p className="text-sm text-rose-700">{error}</p> : null}
       </div>
-    </section>
+    </Card>
   );
 }
