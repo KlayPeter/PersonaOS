@@ -12,6 +12,10 @@ type WorkflowContext = {
         model: string;
         promptName: string;
         promptVersion: string;
+        retryCount?: number;
+        durationMs?: number;
+        inputTokens?: number;
+        outputTokens?: number;
         rawRequest: string;
         rawResponse?: string;
         parsedOutput?: string;
@@ -35,6 +39,7 @@ export async function runWorkflow<T>(
   executor: (context: WorkflowContext) => Promise<T>,
 ) {
   const logger = new RunLogger();
+  const workflowStartedAt = Date.now();
   const workflowRun = await logger.createWorkflowRun({
     workspaceId: input.workspaceId,
     workflowType: input.workflowType,
@@ -44,10 +49,12 @@ export async function runWorkflow<T>(
   const context: WorkflowContext = {
     workflowRunId: workflowRun.id,
     async step(stepName, payload, handler) {
+      const stepStartedAt = Date.now();
       const stepRun = await logger.startStep({
         workflowRunId: workflowRun.id,
         stepName,
         payload,
+        retryCount: input.triggerSource === "system_retry" ? 1 : 0,
       });
 
       try {
@@ -59,10 +66,10 @@ export async function runWorkflow<T>(
           },
         });
 
-        await logger.completeStep(stepRun.id, output);
+        await logger.completeStep(stepRun.id, output, Date.now() - stepStartedAt);
         return output;
       } catch (error) {
-        await logger.failStep(stepRun.id, error);
+        await logger.failStep(stepRun.id, error, Date.now() - stepStartedAt);
         throw error;
       }
     },
@@ -70,10 +77,10 @@ export async function runWorkflow<T>(
 
   try {
     const result = await executor(context);
-    await logger.completeWorkflowRun(workflowRun.id);
+    await logger.completeWorkflowRun(workflowRun.id, Date.now() - workflowStartedAt);
     return { workflowRunId: workflowRun.id, result };
   } catch (error) {
-    await logger.failWorkflowRun(workflowRun.id);
+    await logger.failWorkflowRun(workflowRun.id, error, Date.now() - workflowStartedAt);
     throw error;
   }
 }

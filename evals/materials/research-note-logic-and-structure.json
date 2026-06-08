@@ -1,0 +1,18 @@
+{
+  "name": "research-note-logic-and-structure",
+  "material": {
+    "title": "研究笔记整理要求",
+    "type": "note",
+    "summary": "研究类内容需要有主线、结构和推理链。",
+    "content": "研究笔记不要只堆材料。先讲问题，再给判断，再展开证据。结构要稳，逻辑链要顺，不能像随手摘录。"
+  },
+  "workspaceProfile": {
+    "identity": "研究员",
+    "primaryScenarios": ["写研究笔记", "做结论汇报"],
+    "rememberNotes": "先问题，后判断，再证据。",
+    "dislikedBehaviors": ["材料堆砌", "逻辑跳跃"],
+    "outputPreferences": ["结构稳", "论证顺"]
+  },
+  "expectedInsightTypes": ["style"],
+  "expectedProposalDirections": ["明确主线", "步骤化展开"]
+}

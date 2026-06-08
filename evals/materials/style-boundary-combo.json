@@ -1,0 +1,18 @@
+{
+  "name": "style-boundary-combo",
+  "material": {
+    "title": "技术写作协作要求",
+    "type": "brief",
+    "summary": "既要求结构清楚，也要求别越过工程边界。",
+    "content": "写技术方案时，结构一定要清楚，先给主线和分层标题。同时不要为了写得热闹就擅自改架构或乱扩依赖。"
+  },
+  "workspaceProfile": {
+    "identity": "技术作者",
+    "primaryScenarios": ["写技术方案", "和 AI 协作"],
+    "rememberNotes": "方案文既要清晰，也要守边界。",
+    "dislikedBehaviors": ["结构散", "越界发挥"],
+    "outputPreferences": ["分层标题", "边界清楚"]
+  },
+  "expectedInsightTypes": ["style", "boundary"],
+  "expectedProposalDirections": ["明确主线", "架构与依赖边界"]
+}

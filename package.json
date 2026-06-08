@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "tsx --test tests/**/*.test.ts",
+    "evals:materials": "tsx scripts/run-material-evals.ts",
     "prisma:generate": "prisma generate",
     "db:up": "docker compose up -d mysql",
     "db:push": "prisma db push",

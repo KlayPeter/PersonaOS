@@ -1,0 +1,18 @@
+{
+  "name": "coding-review-playbook",
+  "material": {
+    "title": "代码评审工作法",
+    "type": "note",
+    "summary": "强调边界和流程化复盘。",
+    "content": "评审代码时先看边界，再看依赖，再看回归风险。每次 review 后都要把判断标准写进清单，避免下次从头来过。"
+  },
+  "workspaceProfile": {
+    "identity": "技术负责人",
+    "primaryScenarios": ["代码评审", "团队复盘"],
+    "rememberNotes": "工程边界和评审流程都要显性化。",
+    "dislikedBehaviors": ["拍脑袋改代码"],
+    "outputPreferences": ["按步骤", "可复用"]
+  },
+  "expectedInsightTypes": ["boundary", "workflow"],
+  "expectedProposalDirections": ["架构与依赖边界", "步骤、判断标准和复盘清单"]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "founder-writing-brief",
+  "material": {
+    "title": "创始人长文写作要求",
+    "type": "brief",
+    "summary": "长文可以长，但要有结构和判断。",
+    "content": "文章可以长，但不能散。先把主线钉死，再决定每一段服务什么论点。别写成空泛励志文，要给清楚判断和结构。"
+  },
+  "workspaceProfile": {
+    "identity": "创业者",
+    "primaryScenarios": ["写公开信", "写长文"],
+    "rememberNotes": "内容必须既有判断又有结构。",
+    "dislikedBehaviors": ["空泛", "散", "励志模板文"],
+    "outputPreferences": ["主线清晰", "有观点"]
+  },
+  "expectedInsightTypes": ["style", "anti_pattern"],
+  "expectedProposalDirections": ["明确主线", "模板化"]
+}

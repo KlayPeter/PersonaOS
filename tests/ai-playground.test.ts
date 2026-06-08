@@ -24,6 +24,10 @@ test("runPlayground returns output that references the selected artifact and tas
 
   assert.match(result.output.output, /writing-style\.md v2/);
   assert.match(result.output.output, /写一篇关于 AGENTS\.md 的博客/);
+  assert.equal(result.log.promptName, "playground-run");
+  assert.ok(result.log.inputTokens > 0);
+  assert.ok(result.log.outputTokens > 0);
+  assert.ok(result.log.durationMs > 0);
 });
 
 test("convertFeedbackToProposal turns scattered feedback into a writing proposal", async () => {
@@ -37,4 +41,6 @@ test("convertFeedbackToProposal turns scattered feedback into a writing proposal
 
   assert.equal(result.output.proposals[0]?.category, "writing");
   assert.match(result.output.proposals[0]?.proposedContent ?? "", /主线/);
+  assert.equal(result.log.promptVersion, "v1");
+  assert.equal(result.log.retryCount, 0);
 });

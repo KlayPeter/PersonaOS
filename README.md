@@ -30,6 +30,8 @@ Workspace Profile
 - `/playground` 测试场，支持用资产跑任务并把反馈回流成 proposal
 - `playground_run` / `feedback_to_proposal` workflow
 - 内置自动化测试与 `evals/materials` 回归样本
+- `/runs` 运行观测页，可查看 Workflow / Step / LLM 调用快照
+- 评估脚本可输出 insight 命中率、proposal 方向命中率、空泛率、可执行率
 
 ## 本地启动
 
@@ -69,7 +71,32 @@ npm run dev
 npm test
 ```
 
+7. 运行素材评估
+
+```bash
+npm run evals:materials
+```
+
 默认数据库端口使用 `3307`，避免和本机已有 MySQL 冲突。
+
+## 环境变量
+
+最小本地环境变量可直接参考 `.env.example`：
+
+```bash
+DATABASE_URL="mysql://root:root@127.0.0.1:3307/personaos"
+DEFAULT_USER_EMAIL="demo@personaos.local"
+DEFAULT_USER_NAME="PersonaOS Demo"
+DEFAULT_WORKSPACE_NAME="My Personal System"
+AI_PROVIDER="mock"
+```
+
+说明：
+
+- `DATABASE_URL`：本地 MySQL 连接串
+- `DEFAULT_USER_EMAIL` / `DEFAULT_USER_NAME`：默认用户初始化信息
+- `DEFAULT_WORKSPACE_NAME`：默认 workspace 名称
+- `AI_PROVIDER`：当前默认使用 `mock`，便于稳定调试 workflow 和 evals
 
 ## 主要路由
 
@@ -81,6 +108,7 @@ npm test
 - `/rulebase`：浏览与维护正式规则
 - `/artifacts`：生成与查看导出资产
 - `/playground`：用资产测试任务并回流反馈
+- `/runs`：查看 workflow / step / llm 观测明细
 - `/changelog`：查看关键变更记录
 
 ## 目录结构
@@ -105,3 +133,9 @@ docs/
 - 后续可以在 `src/server/ai/services/ai-service.ts` 中替换为真实模型调用。
 - `.env.example` 提供了本地开发需要的最小环境变量模板。
 - 当前测试使用 Node 内置测试运行能力，通过 `tsx --test` 执行。
+- `npm run evals:materials` 会批量跑 `evals/materials` 中的样本，并输出：
+  - insight 命中率
+  - proposal 方向命中率
+  - proposal 空泛率
+  - proposal 可执行率
+- 当前“空泛规则”判断偏向识别泛化、没有动作约束的提案；“可执行规则”判断偏向识别包含必须、优先、步骤或边界约束的提案。

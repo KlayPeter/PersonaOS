@@ -1,0 +1,18 @@
+{
+  "name": "anti-template-editor-note",
+  "material": {
+    "title": "编辑反馈：别写成模板腔",
+    "type": "feedback",
+    "summary": "用户厌恶空话和模板化表达。",
+    "content": "不要那种四平八稳的模板腔，也不要用正确的废话撑篇幅。宁愿直接下判断，也不要空泛总结。"
+  },
+  "workspaceProfile": {
+    "identity": "内容编辑",
+    "primaryScenarios": ["改稿", "出观点"],
+    "rememberNotes": "结论要具体，少空话。",
+    "dislikedBehaviors": ["模板化", "正确的废话"],
+    "outputPreferences": ["直接判断", "有证据"]
+  },
+  "expectedInsightTypes": ["anti_pattern"],
+  "expectedProposalDirections": ["避免空话", "模板化"]
+}

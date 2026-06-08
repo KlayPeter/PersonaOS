@@ -8,6 +8,10 @@ type LLMLog = {
   model: string;
   promptName: string;
   promptVersion: string;
+  retryCount: number;
+  durationMs: number;
+  inputTokens: number;
+  outputTokens: number;
   rawRequest: string;
   rawResponse: string;
   parsedOutput: string;
@@ -90,6 +94,36 @@ function artifactFilename(type: ArtifactType) {
   }
 
   return "personal-system.md";
+}
+
+function estimateTokens(value: string) {
+  return Math.max(1, Math.ceil(value.length / 4));
+}
+
+function buildLog<TInput, TOutput>(input: {
+  promptName: string;
+  promptVersion: string;
+  request: TInput;
+  response: TOutput;
+  durationMs: number;
+  status?: "success" | "parse_failed" | "model_failed";
+}): LLMLog {
+  const rawRequest = JSON.stringify(input.request, null, 2);
+  const rawResponse = JSON.stringify(input.response, null, 2);
+
+  return {
+    model: process.env.AI_PROVIDER ?? "mock",
+    promptName: input.promptName,
+    promptVersion: input.promptVersion,
+    retryCount: 0,
+    durationMs: Math.max(1, input.durationMs),
+    inputTokens: estimateTokens(rawRequest),
+    outputTokens: estimateTokens(rawResponse),
+    rawRequest,
+    rawResponse,
+    parsedOutput: rawResponse,
+    status: input.status ?? "success",
+  };
 }
 
 function buildInsights(input: AnalyzeMaterialInput): InsightOutput["insights"] {
@@ -339,82 +373,78 @@ function mapFeedbackToProposal(
 
 export class AIService {
   async analyzeMaterial(input: AnalyzeMaterialInput): Promise<AIResult<InsightOutput>> {
+    const startedAt = Date.now();
     const output = {
       insights: buildInsights(input),
     };
 
     return {
       output,
-      log: {
-        model: process.env.AI_PROVIDER ?? "mock",
+      log: buildLog({
         promptName: "material-analysis",
         promptVersion: "v1",
-        rawRequest: JSON.stringify(input, null, 2),
-        rawResponse: JSON.stringify(output, null, 2),
-        parsedOutput: JSON.stringify(output, null, 2),
-        status: "success",
-      },
+        request: input,
+        response: output,
+        durationMs: Date.now() - startedAt,
+      }),
     };
   }
 
   async generateRuleProposals(
     input: GenerateRuleProposalsInput,
   ): Promise<AIResult<ProposalOutput>> {
+    const startedAt = Date.now();
     const output = {
       proposals: input.insights.map((insight) => mapInsightToProposal(insight)),
     };
 
     return {
       output,
-      log: {
-        model: process.env.AI_PROVIDER ?? "mock",
+      log: buildLog({
         promptName: "rule-proposal-generation",
         promptVersion: "v1",
-        rawRequest: JSON.stringify(input, null, 2),
-        rawResponse: JSON.stringify(output, null, 2),
-        parsedOutput: JSON.stringify(output, null, 2),
-        status: "success",
-      },
+        request: input,
+        response: output,
+        durationMs: Date.now() - startedAt,
+      }),
     };
   }
 
   async runPlayground(input: RunPlaygroundInput): Promise<AIResult<{ output: string }>> {
+    const startedAt = Date.now();
     const output = {
       output: buildPlaygroundOutput(input),
     };
 
     return {
       output,
-      log: {
-        model: process.env.AI_PROVIDER ?? "mock",
+      log: buildLog({
         promptName: "playground-run",
         promptVersion: "v1",
-        rawRequest: JSON.stringify(input, null, 2),
-        rawResponse: JSON.stringify(output, null, 2),
-        parsedOutput: JSON.stringify(output, null, 2),
-        status: "success",
-      },
+        request: input,
+        response: output,
+        durationMs: Date.now() - startedAt,
+      }),
     };
   }
 
   async convertFeedbackToProposal(
     input: ConvertFeedbackToProposalInput,
   ): Promise<AIResult<FeedbackProposalOutput>> {
+    const startedAt = Date.now();
     const output = {
       proposals: mapFeedbackToProposal(input),
     };
 
     return {
       output,
-      log: {
-        model: process.env.AI_PROVIDER ?? "mock",
+      log: buildLog({
         promptName: "feedback-to-proposal",
         promptVersion: "v1",
-        rawRequest: JSON.stringify(input, null, 2),
-        rawResponse: JSON.stringify(output, null, 2),
-        parsedOutput: JSON.stringify(output, null, 2),
-        status: "success",
-      },
+        request: input,
+        response: output,
+        durationMs: Date.now() - startedAt,
+      }),
     };
   }
 }

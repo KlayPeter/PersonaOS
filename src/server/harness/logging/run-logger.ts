@@ -29,25 +29,31 @@ export class RunLogger {
         workflowType: input.workflowType,
         triggerSource: input.triggerSource,
         status: WorkflowStatus.running,
+        retryCount: input.triggerSource === "system_retry" ? 1 : 0,
       },
     });
   }
 
-  async completeWorkflowRun(workflowRunId: string) {
+  async completeWorkflowRun(workflowRunId: string, durationMs: number) {
     return this.prisma.workflowRun.update({
       where: { id: workflowRunId },
       data: {
         status: WorkflowStatus.completed,
+        durationMs,
         finishedAt: new Date(),
       },
     });
   }
 
-  async failWorkflowRun(workflowRunId: string) {
+  async failWorkflowRun(workflowRunId: string, error: unknown, durationMs: number) {
+    const message = error instanceof Error ? error.message : "Unknown workflow error";
+
     return this.prisma.workflowRun.update({
       where: { id: workflowRunId },
       data: {
         status: WorkflowStatus.failed,
+        durationMs,
+        errorMessage: message,
         finishedAt: new Date(),
       },
     });
@@ -57,35 +63,39 @@ export class RunLogger {
     workflowRunId: string;
     stepName: string;
     payload: unknown;
+    retryCount?: number;
   }) {
     return this.prisma.stepRun.create({
       data: {
         workflowRunId: input.workflowRunId,
         stepName: input.stepName,
         status: StepStatus.running,
+        retryCount: input.retryCount ?? 0,
         inputSnapshot: serialize(input.payload),
       },
     });
   }
 
-  async completeStep(stepRunId: string, output: unknown) {
+  async completeStep(stepRunId: string, output: unknown, durationMs: number) {
     return this.prisma.stepRun.update({
       where: { id: stepRunId },
       data: {
         status: StepStatus.completed,
+        durationMs,
         finishedAt: new Date(),
         outputSnapshot: serialize(output),
       },
     });
   }
 
-  async failStep(stepRunId: string, error: unknown) {
+  async failStep(stepRunId: string, error: unknown, durationMs: number) {
     const message = error instanceof Error ? error.message : "Unknown step error";
 
     return this.prisma.stepRun.update({
       where: { id: stepRunId },
       data: {
         status: StepStatus.failed,
+        durationMs,
         finishedAt: new Date(),
         errorMessage: message,
         outputSnapshot: serialize({ error: message }),
@@ -99,6 +109,10 @@ export class RunLogger {
       model: string;
       promptName: string;
       promptVersion: string;
+      retryCount?: number;
+      durationMs?: number;
+      inputTokens?: number;
+      outputTokens?: number;
       rawRequest: string;
       rawResponse?: string;
       parsedOutput?: string;
@@ -111,6 +125,10 @@ export class RunLogger {
         model: payload.model,
         promptName: payload.promptName,
         promptVersion: payload.promptVersion,
+        retryCount: payload.retryCount ?? 0,
+        durationMs: payload.durationMs,
+        inputTokens: payload.inputTokens,
+        outputTokens: payload.outputTokens,
         rawRequest: payload.rawRequest,
         rawResponse: payload.rawResponse,
         parsedOutput: payload.parsedOutput,

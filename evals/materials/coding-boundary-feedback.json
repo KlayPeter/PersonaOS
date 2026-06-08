@@ -13,5 +13,6 @@
     "dislikedBehaviors": ["乱加依赖", "大改结构"],
     "outputPreferences": ["小步修改", "可 review"]
   },
-  "expectedInsightTypes": ["boundary"]
+  "expectedInsightTypes": ["boundary"],
+  "expectedProposalDirections": ["架构与依赖边界"]
 }

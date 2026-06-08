@@ -13,5 +13,6 @@
     "dislikedBehaviors": ["空话", "跑偏"],
     "outputPreferences": ["有主线", "有层次"]
   },
-  "expectedInsightTypes": ["style"]
+  "expectedInsightTypes": ["style"],
+  "expectedProposalDirections": ["明确主线", "步骤化展开"]
 }

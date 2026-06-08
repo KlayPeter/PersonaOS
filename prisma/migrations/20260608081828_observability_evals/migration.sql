@@ -1,0 +1,12 @@
+-- AlterTable
+ALTER TABLE `LLMRun` ADD COLUMN `durationMs` INTEGER NULL,
+    ADD COLUMN `retryCount` INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE `StepRun` ADD COLUMN `durationMs` INTEGER NULL,
+    ADD COLUMN `retryCount` INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE `WorkflowRun` ADD COLUMN `durationMs` INTEGER NULL,
+    ADD COLUMN `errorMessage` TEXT NULL,
+    ADD COLUMN `retryCount` INTEGER NOT NULL DEFAULT 0;

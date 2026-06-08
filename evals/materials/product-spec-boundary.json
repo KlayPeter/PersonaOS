@@ -1,0 +1,18 @@
+{
+  "name": "product-spec-boundary",
+  "material": {
+    "title": "产品规格说明补充",
+    "type": "spec",
+    "summary": "要求在现有架构下迭代，不额外扩依赖。",
+    "content": "这轮改动只允许在现有服务边界内完成，不新增第三方依赖，不重写模块结构。重点是小步迭代和可回滚。"
+  },
+  "workspaceProfile": {
+    "identity": "产品工程师",
+    "primaryScenarios": ["写规格", "带开发实现"],
+    "rememberNotes": "优先做可回滚的小步修改。",
+    "dislikedBehaviors": ["重写", "乱引入新依赖"],
+    "outputPreferences": ["边界清楚", "回滚友好"]
+  },
+  "expectedInsightTypes": ["boundary"],
+  "expectedProposalDirections": ["架构与依赖边界"]
+}

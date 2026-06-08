@@ -1,0 +1,18 @@
+{
+  "name": "knowledge-system-retro",
+  "material": {
+    "title": "知识系统复盘",
+    "type": "note",
+    "summary": "经验需要沉淀成系统。",
+    "content": "如果一次复盘没有形成步骤、清单和判断标准，那这次复盘几乎等于没发生。要把经验沉淀成以后还能执行的流程资产。"
+  },
+  "workspaceProfile": {
+    "identity": "研究型写作者",
+    "primaryScenarios": ["知识管理", "方法论沉淀"],
+    "rememberNotes": "复盘最终要指向可执行系统。",
+    "dislikedBehaviors": ["只有感受没有方法"],
+    "outputPreferences": ["系统化", "可执行"]
+  },
+  "expectedInsightTypes": ["workflow"],
+  "expectedProposalDirections": ["流程资产", "步骤、判断标准和复盘清单"]
+}

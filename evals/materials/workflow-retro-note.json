@@ -13,5 +13,6 @@
     "dislikedBehaviors": ["只给结论不沉淀步骤"],
     "outputPreferences": ["流程化", "可回放"]
   },
-  "expectedInsightTypes": ["workflow"]
+  "expectedInsightTypes": ["workflow"],
+  "expectedProposalDirections": ["步骤、判断标准和复盘清单"]
 }

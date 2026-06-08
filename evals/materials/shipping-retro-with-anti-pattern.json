@@ -1,0 +1,18 @@
+{
+  "name": "shipping-retro-with-anti-pattern",
+  "material": {
+    "title": "上线复盘与反模式提醒",
+    "type": "retro",
+    "summary": "既要沉淀流程，也要反模板化。",
+    "content": "上线复盘不能只说下次注意。要写出步骤、检查项和判断标准。同时避免官样文章，别把复盘写成套话总结。"
+  },
+  "workspaceProfile": {
+    "identity": "项目负责人",
+    "primaryScenarios": ["复盘上线", "改进流程"],
+    "rememberNotes": "复盘要留下可复用检查项。",
+    "dislikedBehaviors": ["套话总结", "没有检查项"],
+    "outputPreferences": ["有清单", "不官腔"]
+  },
+  "expectedInsightTypes": ["workflow", "anti_pattern"],
+  "expectedProposalDirections": ["步骤、判断标准和复盘清单", "模板化"]
+}
