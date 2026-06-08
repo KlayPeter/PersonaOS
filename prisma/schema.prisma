@@ -61,6 +61,7 @@ enum RuleStatus {
 
 enum WorkflowType {
   analyze_material
+  apply_proposal
   generate_artifact
   playground_run
   feedback_to_proposal
@@ -94,6 +95,15 @@ enum LLMRunStatus {
   model_failed
 }
 
+enum ChangeType {
+  rule_added
+  rule_modified
+  rule_deleted
+  rule_archived
+  artifact_generated
+  proposal_rejected
+}
+
 model User {
   id         String      @id @default(cuid())
   email      String      @unique
@@ -123,6 +133,7 @@ model Workspace {
   ruleProposals     RuleProposal[]
   rules             Rule[]
   workflowRuns      WorkflowRun[]
+  changelogs        Changelog[]
 }
 
 model Material {
@@ -181,6 +192,7 @@ model RuleProposal {
   material          Material?        @relation(fields: [materialId], references: [id], onDelete: SetNull)
   insight           Insight?         @relation(fields: [insightId], references: [id], onDelete: SetNull)
   rules             Rule[]
+  changelogs        Changelog[]
 
   @@index([workspaceId, status, createdAt])
 }
@@ -199,8 +211,25 @@ model Rule {
   workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   sourceProposal   RuleProposal?  @relation(fields: [sourceProposalId], references: [id], onDelete: SetNull)
   sourceMaterial   Material?      @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
+  changelogs       Changelog[]
 
   @@index([workspaceId, category, status, updatedAt])
+}
+
+model Changelog {
+  id                String      @id @default(cuid())
+  workspaceId       String
+  changeType        ChangeType
+  summary           String
+  detail            String      @db.Text
+  relatedProposalId String?
+  relatedRuleId     String?
+  createdAt         DateTime    @default(now())
+  workspace         Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  relatedProposal   RuleProposal? @relation(fields: [relatedProposalId], references: [id], onDelete: SetNull)
+  relatedRule       Rule?       @relation(fields: [relatedRuleId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, createdAt])
 }
 
 model WorkflowRun {

@@ -158,35 +158,35 @@
 
 ### 6.1 数据模型
 
-- [ ] `P0` 创建 `Rule` 表
-- [ ] `P0` 创建 `Changelog` 表
-- [ ] `P0` 规则保留 `sourceProposalId`
-- [ ] `P0` 规则保留 `sourceMaterialId`
+- [x] `P0` 创建 `Rule` 表
+- [x] `P0` 创建 `Changelog` 表
+- [x] `P0` 规则保留 `sourceProposalId`
+- [x] `P0` 规则保留 `sourceMaterialId`
 
 ### 6.2 Proposals 页面
 
-- [ ] `P0` 建立 `/app/proposals` 页面
-- [ ] `P0` 展示待审核 proposal 列表
-- [ ] `P0` 支持接受 proposal
-- [ ] `P0` 支持拒绝 proposal
-- [ ] `P0` 支持编辑后接受
-- [ ] `P1` 展示 `affectedArtifacts`
-- [ ] `P1` 展示 evidence 原文片段
+- [x] `P0` 建立 `/app/proposals` 页面
+- [x] `P0` 展示待审核 proposal 列表
+- [x] `P0` 支持接受 proposal
+- [x] `P0` 支持拒绝 proposal
+- [x] `P0` 支持编辑后接受
+- [x] `P1` 展示 `affectedArtifacts`
+- [x] `P1` 展示 evidence 原文片段
 
 ### 6.3 Harness Workflow
 
-- [ ] `P0` 实现 `apply_proposal` workflow
-- [ ] `P0` 步骤 1：加载 proposal
-- [ ] `P0` 步骤 2：检查 proposal 是否可操作
-- [ ] `P0` 步骤 3：创建或更新 rule
-- [ ] `P0` 步骤 4：写入 changelog
-- [ ] `P0` 步骤 5：更新 proposal 状态
+- [x] `P0` 实现 `apply_proposal` workflow
+- [x] `P0` 步骤 1：加载 proposal
+- [x] `P0` 步骤 2：检查 proposal 是否可操作
+- [x] `P0` 步骤 3：创建或更新 rule
+- [x] `P0` 步骤 4：写入 changelog
+- [x] `P0` 步骤 5：更新 proposal 状态
 
 ### 6.4 API
 
-- [ ] `P0` 实现 `POST /api/proposals/:id/accept`
-- [ ] `P0` 实现 `POST /api/proposals/:id/reject`
-- [ ] `P0` 实现 `POST /api/proposals/:id/edit-and-accept`
+- [x] `P0` 实现 `POST /api/proposals/:id/accept`
+- [x] `P0` 实现 `POST /api/proposals/:id/reject`
+- [x] `P0` 实现 `POST /api/proposals/:id/edit-and-accept`
 
 验收标准：
 
@@ -198,24 +198,24 @@
 
 ### 7.1 Rulebase 页面
 
-- [ ] `P0` 建立 `/app/rulebase` 页面
-- [ ] `P0` 按分类展示规则
-- [ ] `P0` 支持手动编辑规则
-- [ ] `P0` 显示更新时间
-- [ ] `P0` 显示来源
-- [ ] `P1` 支持归档规则
+- [x] `P0` 建立 `/app/rulebase` 页面
+- [x] `P0` 按分类展示规则
+- [x] `P0` 支持手动编辑规则
+- [x] `P0` 显示更新时间
+- [x] `P0` 显示来源
+- [x] `P1` 支持归档规则
 
 ### 7.2 Changelog 页面
 
-- [ ] `P1` 建立 `/app/changelog` 页面
-- [ ] `P1` 展示规则新增、修改、删除、生成资产记录
+- [x] `P1` 建立 `/app/changelog` 页面
+- [x] `P1` 展示规则新增、修改、删除、生成资产记录
 
 ### 7.3 API
 
-- [ ] `P0` 实现 `GET /api/rules`
-- [ ] `P0` 实现 `PATCH /api/rules/:id`
-- [ ] `P1` 实现 `POST /api/rules/:id/archive`
-- [ ] `P1` 实现 `GET /api/changelog`
+- [x] `P0` 实现 `GET /api/rules`
+- [x] `P0` 实现 `PATCH /api/rules/:id`
+- [x] `P1` 实现 `POST /api/rules/:id/archive`
+- [x] `P1` 实现 `GET /api/changelog`
 
 验收标准：
 

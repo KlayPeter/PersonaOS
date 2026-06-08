@@ -4,6 +4,9 @@ const navigation = [
   { href: "/", label: "总览" },
   { href: "/onboarding", label: "画像" },
   { href: "/inbox", label: "素材箱" },
+  { href: "/proposals", label: "提案" },
+  { href: "/rulebase", label: "规则库" },
+  { href: "/changelog", label: "变更" },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {

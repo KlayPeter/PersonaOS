@@ -17,6 +17,7 @@ export class RunLogger {
     workspaceId: string;
     workflowType:
       | "analyze_material"
+      | "apply_proposal"
       | "generate_artifact"
       | "playground_run"
       | "feedback_to_proposal";

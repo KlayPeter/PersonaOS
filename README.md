@@ -21,6 +21,9 @@ Workspace Profile
 - `analyze_material` workflow
 - `WorkflowRun` / `StepRun` / `LLMRun` 留痕
 - `Insight` 与 `RuleProposal` 落库和页面回看
+- Proposal 审核页，支持接受、拒绝、编辑后接受
+- `apply_proposal` workflow、Rulebase 与 Changelog
+- 正式规则的编辑、归档与来源追踪
 
 ## 本地启动
 
@@ -62,6 +65,9 @@ npm run dev
 - `/onboarding`：用户画像编辑
 - `/inbox`：素材录入与列表
 - `/inbox/[id]`：素材详情、洞察与提案
+- `/proposals`：审核候选规则提案
+- `/rulebase`：浏览与维护正式规则
+- `/changelog`：查看关键变更记录
 
 ## 目录结构
 
