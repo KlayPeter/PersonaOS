@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4ede3;
+  --paper: #fbf7f0;
+  --panel: rgba(255, 251, 245, 0.72);
+  --panel-strong: rgba(248, 241, 230, 0.92);
+  --foreground: #17130f;
+  --muted: #64584d;
+  --line: rgba(88, 71, 57, 0.16);
+  --accent: #a53a2b;
+  --accent-strong: #7f2618;
+  --shadow: 0 22px 60px rgba(41, 25, 16, 0.09);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background:
+    radial-gradient(circle at top left, rgba(223, 180, 120, 0.24), transparent 28%),
+    radial-gradient(circle at top right, rgba(165, 58, 43, 0.12), transparent 22%),
+    linear-gradient(180deg, #f8f0e6 0%, #f4ede3 36%, #ede2d5 100%);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-plex-sans), sans-serif;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.eyebrow {
+  color: var(--accent-strong);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.hero-grid {
+  display: grid;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  }
+}
+
+.panel,
+.panel-muted {
+  border: 1px solid var(--line);
+  border-radius: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  padding: 1.75rem;
+}
+
+.panel-muted {
+  background: rgba(255, 251, 245, 0.88);
+  padding: 1.35rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.field span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border-radius: 1.3rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 248, 0.96);
+  color: var(--foreground);
+  padding: 0.95rem 1rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: rgba(165, 58, 43, 0.45);
+  box-shadow: 0 0 0 4px rgba(165, 58, 43, 0.08);
+  transform: translateY(-1px);
+}
+
+.primary-button,
+.nav-pill,
+.secondary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary-button {
+  border: 0;
+  background: var(--accent);
+  color: #fff8f0;
+  padding: 0.9rem 1.35rem;
+  font-weight: 600;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: var(--accent-strong);
+  transform: translateY(-1px);
+}
+
+.primary-button:disabled {
+  opacity: 0.7;
+}
+
+.nav-pill {
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 248, 0.76);
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.nav-pill:hover,
+.secondary-link:hover {
+  transform: translateY(-1px);
+}
+
+.secondary-link {
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 248, 0.8);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+}
+
+.status-chip,
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+}
+
+.status-chip {
+  background: rgba(165, 58, 43, 0.12);
+  color: var(--accent-strong);
+  padding: 0.4rem 0.72rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tag-chip {
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 248, 0.92);
+  padding: 0.35rem 0.72rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.step-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  border-radius: 1.5rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 251, 245, 0.9);
+  padding: 1.1rem 1.2rem;
+}
+
+.step-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.step-card p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.step-icon {
+  color: var(--accent);
+  margin-top: 0.2rem;
+}
